@@ -1,0 +1,3 @@
+rootProject.name = 'champs_diary'
+
+include ':app'
