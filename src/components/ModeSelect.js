@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import { Button } from './common';
 
 const ModeSelect = () => {
@@ -11,14 +12,11 @@ const ModeSelect = () => {
                 Track your progress in weight lifting and cardio.
             </Text>
 
-            <Button styling={[menuButton, firstButton]}>
-                Facebook Login
-            </Button>
-            <Button styling={menuButton}> 
+            <Button styling={[menuButton, firstButton]} onPress={() => Actions.defaultLogin()}> 
                 Login with a Champ Account
             </Button>
             <Button styling={menuButton}>
-                Create a Champ Account
+                Facebook Login
             </Button>
             <Button styling={menuButton}>
                 Welcome Tutorial

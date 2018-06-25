@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { TextInput, View, Text } from 'react-native';
 
 const Input = ({ label, value, onChangeText, placeholder, secureTextEntry }) => {
@@ -12,6 +12,7 @@ const Input = ({ label, value, onChangeText, placeholder, secureTextEntry }) => 
                 placeholder={placeholder}
                 autoCorrect={false}
                 style={inputStyle}
+                underlineColorAndroid="transparent"
                 value={value}
                 onChangeText={onChangeText}
             />
@@ -26,6 +27,7 @@ const styles = {
         color: '#000',
         paddingRight: 5,
         paddingLeft: 5,
+        paddingVertical: 0,
         fontSize: 18,
         lineHeight: 23,
         flex: 2

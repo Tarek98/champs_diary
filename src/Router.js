@@ -1,6 +1,8 @@
 import React from 'react';
 import { Scene, Router } from 'react-native-router-flux';
 import ModeSelect from './components/ModeSelect';
+import LoginForm from './components/LoginForm';
+import SportSelect from './components/SportSelect';
 
 const RouterComponent = () => {
     return (
@@ -11,6 +13,15 @@ const RouterComponent = () => {
                     component={ModeSelect}
                     title="Champion's Diary"
                     initial
+                />
+                <Scene
+                    key="defaultLogin"
+                    component={LoginForm}
+                    title="Please Login"
+                />
+                <Scene
+                    key="sportSelect"
+                    component={SportSelect}
                 />
             </Scene>
         </Router>
