@@ -4,7 +4,10 @@ import {
     PASSWORD_CHANGED,
     LOGIN_USER_SUCCESS,
     LOGIN_USER_FAIL,
-    LOGIN_USER
+    LOGIN_USER,
+    LOGOUT_USER,
+    LOGOUT_SUCCESS,
+    LOGOUT_FAIL
 } from './types';
 import firebase from 'firebase';
 
@@ -40,6 +43,22 @@ export const loginUser = ({ email, password }) => {
     };
 };
 
+export const logoutUser = () => {
+    return (dispatch) => {
+      dispatch({ type: LOGOUT_USER });
+
+      firebase.auth().signOut()
+        .then(() => {
+            dispatch({ type: LOGOUT_SUCCESS });
+            Actions.auth();
+        })
+        .catch((error) => {
+            console.log(error);
+            dispatch({ type: LOGOUT_FAIL });
+        });
+    };
+};
+
 const loginUserFail = (dispatch) => {
     dispatch({ type: LOGIN_USER_FAIL });
 };
@@ -50,5 +69,5 @@ const loginUserSuccess = (dispatch, user) => {
         payload: user
     });
 
-    Actions.sportSelect();
+    Actions.tabBar();
 };
