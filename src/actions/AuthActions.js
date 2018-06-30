@@ -31,12 +31,15 @@ export const loginUser = ({ email, password }) => {
 
         firebase.auth().signInWithEmailAndPassword(email, password)
             .then(user => loginUserSuccess(dispatch, user))
-            .catch((error) => {
-                console.log(error);
+            .catch((loginError) => {
+                console.log(loginError);
                 firebase.auth().createUserWithEmailAndPassword(email, password)
-                    .then(user => loginUserSuccess(dispatch, user))
-                    .catch((error1) => {
-                        console.log(error1);
+                    .then(user => {
+                        addUserDataToDB(user);
+                        loginUserSuccess(dispatch, user);
+                    })
+                    .catch((signupError) => {
+                        console.log(signupError);
                         loginUserFail(dispatch);
                     });
             });
@@ -57,6 +60,16 @@ export const logoutUser = () => {
             dispatch({ type: LOGOUT_FAIL });
         });
     };
+};
+
+const addUserDataToDB = (userInfo) => {
+    const { uid, email } = userInfo.user;
+
+    firebase.firestore().collection('users').doc(uid.toString()).set({ email }, { merge: true })
+        .then((docRef) =>
+         console.log(`Document under users collection written with ID: ${docRef.id}`))
+        .catch((dbError) =>
+         console.log(`Error adding document: ${dbError}`));
 };
 
 const loginUserFail = (dispatch) => {

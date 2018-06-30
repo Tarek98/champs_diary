@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Text, View } from 'react-native';
 import { connect } from 'react-redux';
-import { Actions } from 'react-native-router-flux';
 import { logoutUser } from '../actions';
 import { Card, CardSection, Button, Spinner } from './common';
 

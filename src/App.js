@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
+import { persistStore, persistCombineReducers } from 'redux-persist';
+import storage from 'redux-persist/lib/storage'; // defaults to Async Storage for react-native
+import { PersistGate } from 'redux-persist/integration/react';
 import ReduxThunk from 'redux-thunk';
 import Router from './Router';
 import reducers from './reducers';
 import firebase from 'firebase';
+
+require('firebase/firestore');
 
 class App extends Component {
     componentWillMount() {
@@ -21,11 +26,31 @@ class App extends Component {
     }
 
     render() {
-        const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
+        const firestore = firebase.firestore();
+        const settings = { timestampsInSnapshots: true };
+        firestore.settings(settings);
+
+        const persistConfig = {
+            key: 'root',
+            storage
+        };
+
+        const persistedReducer = persistCombineReducers(persistConfig, reducers);
+
+        const store = createStore(
+            persistedReducer, 
+            {},
+            applyMiddleware(ReduxThunk)
+        );
+
+        // Enable redux store persistence to make the app work offline as well! 
+        const reduxPersistor = persistStore(store);
 
         return (
             <Provider store={store}>
-                <Router />
+                <PersistGate loading={null} persistor={reduxPersistor}>
+                    <Router />
+                </PersistGate>
             </Provider>
         );
     }

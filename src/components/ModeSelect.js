@@ -1,29 +1,39 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import { connect } from 'react-redux';
 import { Button } from './common';
 
-const ModeSelect = () => {
-    const { menuButton, firstButton, introText } = styles;
+class ModeSelect extends Component {
+    componentWillMount() {
+        // If a user is logged in when app starts, navigate them to the main app flow (skip )
+        if (this.props.user) {
+            Actions.tabBar();
+        }
+    }
 
-    return (
-        <View style={{ flex: 1 }}>
-            <Text style={introText}>
-                Track your progress in weight lifting and cardio.
-            </Text>
+    render() {
+        const { menuButton, firstButton, introText } = styles;
 
-            <Button styling={[menuButton, firstButton]} onPress={() => Actions.defaultLogin()}> 
-                Login with a Champ Account
-            </Button>
-            <Button styling={menuButton}>
-                Facebook Login
-            </Button>
-            <Button styling={menuButton}>
-                Welcome Tutorial
-            </Button>
-        </View>
-    );
-};
+        return (
+            <View style={{ flex: 1 }}>
+                <Text style={introText}>
+                    Track your progress in weight lifting and cardio.
+                </Text>
+    
+                <Button styling={[menuButton, firstButton]} onPress={() => Actions.defaultLogin()}> 
+                    Login with a Champ Account
+                </Button>
+                <Button styling={menuButton}>
+                    Facebook Login
+                </Button>
+                <Button styling={menuButton}>
+                    Welcome Tutorial
+                </Button>
+            </View>
+        );
+    }
+}
 
 const styles = {
     introText: {
@@ -45,4 +55,8 @@ const styles = {
     }
 };
 
-export default ModeSelect;
+const mapStateToProps = ({ auth }) => {
+    return { user: auth.user };
+};
+
+export default connect(mapStateToProps)(ModeSelect);

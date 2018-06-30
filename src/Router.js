@@ -17,7 +17,7 @@ const RouterComponent = () => {
                     <Scene
                         key="modeSelect"
                         component={ModeSelect}
-                        title="Champion's Diary"
+                        title="Welcome To Champion's Diary"
                         initial
                     />
                     <Scene
