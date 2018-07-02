@@ -11,7 +11,13 @@ import firebase from 'firebase';
 
 require('firebase/firestore');
 
+export const persistConfig = {
+    key: 'root',
+    storage
+};
+
 class App extends Component {
+
     componentWillMount() {
         // Initialize Firebase
         const config = {
@@ -27,13 +33,13 @@ class App extends Component {
 
     render() {
         const firestore = firebase.firestore();
+
+        // firestore.enablePersistence()
+        //  .then(() => console.log('Success: Firestore offline data enabled.'))
+        //  .catch(() => console.log('Failure: Error in enabling firestore offline data.'));
+
         const settings = { timestampsInSnapshots: true };
         firestore.settings(settings);
-
-        const persistConfig = {
-            key: 'root',
-            storage
-        };
 
         const persistedReducer = persistCombineReducers(persistConfig, reducers);
 
@@ -43,7 +49,7 @@ class App extends Component {
             applyMiddleware(ReduxThunk)
         );
 
-        // Enable redux store persistence to make the app work offline as well! 
+        // Enable redux store persistence to make the app retain state offline! 
         const reduxPersistor = persistStore(store);
 
         return (

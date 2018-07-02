@@ -8,6 +8,7 @@ import RunningTracker from './components/Running/RunningTracker';
 import SwimmingTracker from './components/Swimming/SwimmingTracker';
 import WeightTracker from './components/WeightCharts/WeightTracker';
 import SettingsPage from './components/SettingsPage';
+import WorkoutList from './components/Lifting/WorkoutList';
 
 const RouterComponent = () => {
     return (
@@ -27,52 +28,62 @@ const RouterComponent = () => {
                     />
                 </Scene>
                 
-                {/* Main Tab Container */}
-                <Scene
-                    key="tabBar"
-                    rightTitle="Settings"
-                    onRight={() => Actions.settingsPage()}
-                    tabs
-                    tabBarStyle={styles.tabBar}
-                    tabBarPosition={'bottom'}
-                    showLabel={false}
-                    type={ActionConst.RESET}
-                >
-                    <Scene key="lift" title="Lift" icon={TabIcon}>
-                        <Scene
-                            key="workoutSelect"
-                            component={WorkoutSelect}
-                            title="Workout Selection"
-                        />
-                    </Scene>
-                    <Scene key="running" title="Run" icon={TabIcon}>
-                        <Scene
-                            key="runningTracker"
-                            component={RunningTracker}
-                            title="Running Tracker"
-                        />
-                    </Scene>
-                    <Scene key="swim" title="Swim" icon={TabIcon}>
-                        <Scene
-                            key="swimmingTracker"
-                            component={SwimmingTracker}
-                            title="Swimming Tracker"
-                        />
-                    </Scene>
-                    <Scene key="weight" title="Weight" icon={TabIcon}>
-                        <Scene
-                            key="weightTracker"
-                            component={WeightTracker}
-                            title="Weight Tracker"
-                        />
-                    </Scene>
-                </Scene>
                 
-                <Scene
-                    key="settingsPage"
-                    component={SettingsPage}
-                    title="Settings"
-                />
+                <Scene key="main">
+                    {/* Main Tab Container */}
+                    <Scene
+                        key="tabBar"
+                        rightTitle="Settings"
+                        onRight={() => Actions.settingsPage()}
+                        hideNavBar
+                        tabs
+                        tabBarStyle={styles.tabBar}
+                        tabBarPosition={'bottom'}
+                        showLabel={false}
+                        type={ActionConst.RESET}
+                    >
+                        <Scene key="lift" title="Lift" icon={TabIcon}>
+                            <Scene
+                                key="workoutSelect"
+                                component={WorkoutSelect}
+                                title="Workout Selection"
+                            />
+                            <Scene
+                                key="workoutList"
+                                component={WorkoutList}
+                                title="Workout Routines"
+                            />
+                        </Scene>
+                        <Scene key="running" title="Run" icon={TabIcon}>
+                            <Scene
+                                key="runningTracker"
+                                component={RunningTracker}
+                                title="Running Tracker"
+                            />
+                        </Scene>
+                        <Scene key="swim" title="Swim" icon={TabIcon}>
+                            <Scene
+                                key="swimmingTracker"
+                                component={SwimmingTracker}
+                                title="Swimming Tracker"
+                            />
+                        </Scene>
+                        <Scene key="weight" title="Weight" icon={TabIcon}>
+                            <Scene
+                                key="weightTracker"
+                                component={WeightTracker}
+                                title="Weight Tracker"
+                            />
+                        </Scene>
+                    </Scene>
+
+                    <Scene
+                        key="settingsPage"
+                        component={SettingsPage}
+                        title="Settings"
+                        hideTabBar
+                    />
+                </Scene>
             </Scene>
         </Router>
     );

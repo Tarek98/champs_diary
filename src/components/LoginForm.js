@@ -74,7 +74,7 @@ class LoginForm extends Component {
                  
                 <CardSection>
                     <Text style={{ flex: 1, textAlign: 'center', fontWeight: 'bold' }}>
-                    *If you aren't yet registered, an account will be created for you upon login.
+                    ** If you aren't yet registered, an account will be created for you upon login. **
                     </Text>
                 </CardSection>
             </Card>
@@ -84,16 +84,17 @@ class LoginForm extends Component {
 
 const styles = {
     errorTextStyle: {
-        fontSize: 20,
+        fontSize: 15,
         alignSelf: 'center',
         color: 'red'
     }
 };
 
-const mapStateToProps = ({ auth }) => {
+const mapStateToProps = ({ auth, connection }) => {
     const { email, password, error, loading, user } = auth;
+    const { isConnected } = connection;
 
-    return { email, password, error, loading, user };
+    return { email, password, error, loading, user, isConnected };
 };
 
 export default connect(mapStateToProps, 

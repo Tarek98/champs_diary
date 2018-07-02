@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import Calendar from 'react-native-calendar-datepicker';
 import Moment from 'moment';
 import { Card, CardSection, Button } from '../common';
@@ -18,13 +19,13 @@ class WorkoutSelect extends Component {
                         <Button>Create a Workout</Button>
                     </CardSection>
                     <CardSection>
-                        <Button>View Existing Workouts</Button>
+                        <Button onPress={() => Actions.workoutList()}>View Existing Workouts</Button>
                     </CardSection>
                 </Card>
                 <Card>
                     <CardSection>
                         <Text style={{ fontWeight: 'bold' }}>
-                            To track your workout, tap on a date on the calendar
+                            To track your workout, tap on a date in the calendar
                         </Text>
                     </CardSection>
                     <CardSection>

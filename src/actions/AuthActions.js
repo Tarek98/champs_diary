@@ -30,7 +30,9 @@ export const loginUser = ({ email, password }) => {
         dispatch({ type: LOGIN_USER });
 
         firebase.auth().signInWithEmailAndPassword(email, password)
-            .then(user => loginUserSuccess(dispatch, user))
+            .then(user => {
+                loginUserSuccess(dispatch, user);
+            })
             .catch((loginError) => {
                 console.log(loginError);
                 firebase.auth().createUserWithEmailAndPassword(email, password)
@@ -39,8 +41,7 @@ export const loginUser = ({ email, password }) => {
                         loginUserSuccess(dispatch, user);
                     })
                     .catch((signupError) => {
-                        console.log(signupError);
-                        loginUserFail(dispatch);
+                        loginUserFail(dispatch, signupError.code);
                     });
             });
     };
@@ -63,17 +64,19 @@ export const logoutUser = () => {
 };
 
 const addUserDataToDB = (userInfo) => {
-    const { uid, email } = userInfo.user;
+    const { uid, email, metadata } = userInfo.user;
 
-    firebase.firestore().collection('users').doc(uid.toString()).set({ email }, { merge: true })
-        .then((docRef) =>
-         console.log(`Document under users collection written with ID: ${docRef.id}`))
-        .catch((dbError) =>
-         console.log(`Error adding document: ${dbError}`));
+    firebase.firestore().doc(`users/${uid}`).set(
+        { email, date_created: metadata.creationTime },
+        { merge: false }
+    );
 };
 
-const loginUserFail = (dispatch) => {
-    dispatch({ type: LOGIN_USER_FAIL });
+const loginUserFail = (dispatch, errorCode) => {
+    dispatch({ 
+        type: LOGIN_USER_FAIL,
+        payload: errorCode
+    });
 };
 
 const loginUserSuccess = (dispatch, user) => {
@@ -82,5 +85,5 @@ const loginUserSuccess = (dispatch, user) => {
         payload: user
     });
 
-    Actions.tabBar();
+    Actions.main();
 };

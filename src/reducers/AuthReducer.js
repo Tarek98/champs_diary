@@ -1,3 +1,5 @@
+import { purgeStoredState } from 'redux-persist';
+import { persistConfig } from '../App';
 import { 
     EMAIL_CHANGED,
     PASSWORD_CHANGED,
@@ -20,6 +22,8 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
     console.log(action.type);
 
+    let errorCode = 'Authentication Failed.';
+
     switch (action.type) {
         case EMAIL_CHANGED:
             // cannot do following: state.email = action.payload (redux thinks nothing changed)
@@ -30,10 +34,22 @@ export default (state = INITIAL_STATE, action) => {
         case LOGIN_USER_SUCCESS:
             return { ...state, ...INITIAL_STATE, user: action.payload };
         case LOGIN_USER_FAIL:
-            return { ...state, error: 'Authentication Failed.', loading: false };
+            switch (action.payload) {
+                case 'auth/email-already-in-use':
+                    errorCode = 'E-mail/password combination is false.';
+                    break;
+                case 'auth/network-request-failed':
+                    errorCode = 'Login failed, check your network connection.';
+                    break;
+                default:
+                    break;
+            }
+            return { ...state, error: errorCode, loading: false };
         case (LOGIN_USER || LOGOUT_USER):
             return { ...state, loading: true, error: '' };
         case LOGOUT_SUCCESS:
+            // Clear offline persisted state from redux store after user logout
+            purgeStoredState(persistConfig);
             return { ...INITIAL_STATE };
         case LOGOUT_FAIL:
             return { ...state, error: 'Logout Failed.', loading: false };

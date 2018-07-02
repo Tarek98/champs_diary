@@ -8,7 +8,7 @@ class ModeSelect extends Component {
     componentWillMount() {
         // If a user is logged in when app starts, navigate them to the main app flow (skip )
         if (this.props.user) {
-            Actions.tabBar();
+            Actions.main();
         }
     }
 
