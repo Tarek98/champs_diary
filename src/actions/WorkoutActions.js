@@ -14,13 +14,13 @@ export const routinesFetch = () => {
     // .onSnapshot() gets real time updates
     return (dispatch) => {
         firebase.firestore().collection('/workouts')
-        .where('public', '==', true)
+        .orderBy('level')
         .onSnapshot(
-            (wCollection) => {
-                console.log(wCollection);
-                wCollection.forEach((workout) => {
+            (querySnapshot) => {
+                querySnapshot.forEach((workout) => {
                     allWorkouts.public.push(workout.data());
                 });
+                console.log(allWorkouts.public);
                 dispatch({
                     type: ROUTINE_FETCH_SUCCESS,
                     payload: allWorkouts

@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextInput, View, Text } from 'react-native';
 
-const Input = ({ label, value, onChangeText, placeholder, secureTextEntry }) => {
+const Input = ({ label, value, onChangeText, placeholder, secureTextEntry, editable }) => {
     const { inputStyle, labelStyle, containerStyle } = styles;
 
     return (
@@ -15,6 +15,7 @@ const Input = ({ label, value, onChangeText, placeholder, secureTextEntry }) => 
                 underlineColorAndroid="transparent"
                 value={value}
                 onChangeText={onChangeText}
+                editable={editable}
             />
         </View>
     );

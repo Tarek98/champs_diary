@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
-import { ListView, Text, TouchableWithoutFeedback, View, NetInfo } from 'react-native';
+import { ListView, Text, View, NetInfo, Linking } from 'react-native';
 import { connect } from 'react-redux';
-import { CardSection } from '../common';
+import { CardSection, Card } from '../common';
 import {
     routinesFetch,
     connectionChange
 } from '../../actions';
+
+const Accordion = require('react-native-accordion');
+
+const Difficulty = ['Best program for beginners', 'Fun program for beginners',
+                     'Best program for intermediates', 'Good program for advanced-intermediates'];
 
 class WorkoutList extends Component {
     componentWillMount() {
@@ -42,31 +47,70 @@ class WorkoutList extends Component {
     }
 
     renderRow(routine) {
+        const programURL = routine.program_guide;
+
+        const header = (
+            <View>
+                <CardSection style={{ backgroundColor: 'grey', height: 40 }}>
+                    <Text style={{ color: 'white', fontSize: 15 }}>{routine.routine_name}</Text>
+                </CardSection>
+            </View>
+        );
+
+        const content = (
+            <View>
+                <CardSection style={{ flexDirection: 'column', marginLeft: 5 }}>
+                    <Text style={{ fontWeight: 'bold' }}>
+                        Program Guide
+                    </Text>
+                    <Text style={{ color: 'blue' }} onPress={() => Linking.openURL(programURL)}>
+                        {routine.program_guide || 'Not Available'}
+                    </Text>
+                    <Text />
+                    <Text style={{ fontWeight: 'bold' }}>
+                        Description
+                    </Text>
+                    <Text>
+                        {Difficulty[routine.level]}
+                    </Text>
+                </CardSection>
+            </View>
+        );
+
         return (
-            <TouchableWithoutFeedback>
-                <View>
-                    <CardSection>
-                        <Text>{routine.routine_name}</Text>
-                    </CardSection>
-                </View>
-            </TouchableWithoutFeedback>
+            <Accordion
+                header={header}
+                content={content}
+                easing="easeOutCubic"
+                style={{ marginLeft: 5, marginRight: 5 }}
+                expanded={routine.level === 0}
+            />
         );
     }
 
     render() {
         return (
-            <ListView
-                enableEmptySections
-                dataSource={this.dataSource}
-                renderRow={this.renderRow}
-            />
+            <View>
+                <Card>
+                    <CardSection>
+                        <Text>
+                            Tap on the routines below to toggle their details
+                        </Text>
+                    </CardSection>
+                </Card>
+                <ListView
+                    enableEmptySections
+                    dataSource={this.dataSource}
+                    renderRow={this.renderRow.bind(this)}
+                />
+            </View>
         );
     }   
 }
 
 const mapStateToProps = state => {
     // workout routines JSON object
-    return { routines: state.routines.public, isConnected: state.isConnected };
+    return { routines: state.routines.public, isConnected: state.connection.isConnected };
 };
 
 export default connect(mapStateToProps, { routinesFetch, connectionChange })(WorkoutList);

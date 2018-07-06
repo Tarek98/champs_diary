@@ -3,12 +3,13 @@ import { Scene, Router, ActionConst, Actions } from 'react-native-router-flux';
 import ModeSelect from './components/ModeSelect';
 import LoginForm from './components/LoginForm';
 import TabIcon from './components/common/TabIcon';
+import WorkoutMain from './components/Lifting/WorkoutMain';
+import WorkoutList from './components/Lifting/WorkoutList';
 import WorkoutSelect from './components/Lifting/WorkoutSelect';
 import RunningTracker from './components/Running/RunningTracker';
 import SwimmingTracker from './components/Swimming/SwimmingTracker';
 import WeightTracker from './components/WeightCharts/WeightTracker';
 import SettingsPage from './components/SettingsPage';
-import WorkoutList from './components/Lifting/WorkoutList';
 
 const RouterComponent = () => {
     return (
@@ -44,14 +45,19 @@ const RouterComponent = () => {
                     >
                         <Scene key="lift" title="Lift" icon={TabIcon}>
                             <Scene
-                                key="workoutSelect"
-                                component={WorkoutSelect}
-                                title="Workout Selection"
+                                key="workoutMain"
+                                component={WorkoutMain}
+                                title="Your Workouts"
                             />
                             <Scene
                                 key="workoutList"
                                 component={WorkoutList}
                                 title="Workout Routines"
+                            />
+                            <Scene
+                                key="workoutSelect"
+                                component={WorkoutSelect}
+                                title="Select Your Workout"
                             />
                         </Scene>
                         <Scene key="running" title="Run" icon={TabIcon}>
