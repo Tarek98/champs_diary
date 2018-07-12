@@ -1,10 +1,12 @@
 import { Actions } from 'react-native-router-flux';
+import firebase from 'react-native-firebase';
 import {
     ROUTINE_CREATE,
     WORKOUT_CREATE,
-    ROUTINE_FETCH_SUCCESS
+    ROUTINE_FETCH,
+    ROUTINE_FETCH_SUCCESS,
+    VIEW_WORKOUT_DETAILS
 } from './types';
-import firebase from 'firebase';
 
 export const routinesFetch = () => {
     //const { currentUser } = firebase.auth();
@@ -13,12 +15,17 @@ export const routinesFetch = () => {
     // auto dispatch action to fetch new data every time '/workouts' documents is updated
     // .onSnapshot() gets real time updates
     return (dispatch) => {
-        firebase.firestore().collection('/workouts')
+        console.log('routine fetch');
+        dispatch({
+            type: ROUTINE_FETCH
+        });
+
+        firebase.firestore().collection('/workouts/')
         .orderBy('level')
-        .onSnapshot(
+        .onSnapshot({ includeMetadataChanges: true },
             (querySnapshot) => {
                 querySnapshot.forEach((workout) => {
-                    allWorkouts.public.push(workout.data());
+                    allWorkouts.public.push({ ...workout.data(), id: workout.id });
                 });
                 console.log(allWorkouts.public);
                 dispatch({
@@ -30,6 +37,13 @@ export const routinesFetch = () => {
                 console.log(error);
             }
         );
+    };
+};
+
+export const viewWorkoutDetails = (routineId) => {
+    return {
+        type: VIEW_WORKOUT_DETAILS,
+        payload: routineId
     };
 };
 

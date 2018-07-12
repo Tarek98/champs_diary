@@ -1,4 +1,5 @@
 import { Actions } from 'react-native-router-flux';
+import firebase from 'react-native-firebase';
 import { 
     EMAIL_CHANGED,
     PASSWORD_CHANGED,
@@ -9,7 +10,6 @@ import {
     LOGOUT_SUCCESS,
     LOGOUT_FAIL
 } from './types';
-import firebase from 'firebase';
 
 export const emailChanged = (text) => {
     return {

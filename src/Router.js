@@ -104,8 +104,7 @@ const styles = {
     },
     navBarTitle: {
         flex: 1,
-        color: '#C0C0C0',
-        textAlign: 'center'
+        color: '#C0C0C0'
     },
     tabBar: {
         backgroundColor: '#333333'

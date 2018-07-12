@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AD_UNIT_ID_FOR_BANNER_TEST</key>
+	<string>ca-app-pub-3940256099942544/2934735716</string>
+	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
+	<string>ca-app-pub-3940256099942544/4411468910</string>
+	<key>CLIENT_ID</key>
+	<string>627326368672-db1n56c1cs71mjg0nv9av5pfap8rg7bv.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.627326368672-db1n56c1cs71mjg0nv9av5pfap8rg7bv</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAk_LPgz_VWPiHqqm1yjolrrUvl4WD_rX8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>627326368672</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>org.reactjs.native.example.champs-diary</string>
+	<key>PROJECT_ID</key>
+	<string>champs-diary</string>
+	<key>STORAGE_BUCKET</key>
+	<string>champs-diary.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<true></true>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<false></false>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:627326368672:ios:315f73aa5ac7802c</string>
+	<key>DATABASE_URL</key>
+	<string>https://champs-diary.firebaseio.com</string>
+</dict>
+</plist>

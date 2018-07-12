@@ -4,6 +4,6 @@ import ConnectivityReducer from './ConnectivityReducer';
 
 export default ({
     auth: AuthReducer,
-    routines: WorkoutReducer,
+    workouts: WorkoutReducer,
     connection: ConnectivityReducer
 });

@@ -39,7 +39,7 @@ class SettingsPage extends Component {
             return (
                 <Card>
                     <CardSection>
-                        <Text>You are logged in as {this.props.user.user.email}</Text>
+                        <Text>You are logged in as {this.props.user._user.email}</Text>
                     </CardSection>
                     {this.renderError()}
                     <CardSection>

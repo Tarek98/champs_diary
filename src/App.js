@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import { persistStore, persistCombineReducers } from 'redux-persist';
+import firebase from 'react-native-firebase';
 import storage from 'redux-persist/lib/storage'; // defaults to Async Storage for react-native
 import { PersistGate } from 'redux-persist/integration/react';
 import ReduxThunk from 'redux-thunk';
 import Router from './Router';
 import reducers from './reducers';
-import firebase from 'firebase';
 
 require('firebase/firestore');
 
@@ -17,29 +17,28 @@ export const persistConfig = {
 };
 
 class App extends Component {
-
+    
     componentWillMount() {
         // Initialize Firebase
-        const config = {
-            apiKey: 'AIzaSyBI46wSCauv5zfdpOb0wGnwlRZLYAPgzuE',
-            authDomain: 'champs-diary.firebaseapp.com',
-            databaseURL: 'https://champs-diary.firebaseio.com',
-            projectId: 'champs-diary',
-            storageBucket: 'champs-diary.appspot.com',
-            messagingSenderId: '627326368672'
-        };
-        firebase.initializeApp(config);
+        // const config = {
+        //     apiKey: 'AIzaSyBI46wSCauv5zfdpOb0wGnwlRZLYAPgzuE',
+        //     authDomain: 'champs-diary.firebaseapp.com',
+        //     databaseURL: 'https://champs-diary.firebaseio.com',
+        //     projectId: 'champs-diary',
+        //     storageBucket: 'champs-diary.appspot.com',
+        //     messagingSenderId: '627326368672'
+        // };
+        // firebase.initializeApp(config);
     }
 
     render() {
         const firestore = firebase.firestore();
 
+        const settings = { timestampsInSnapshots: true };
+        firestore.settings(settings);
         // firestore.enablePersistence()
         //  .then(() => console.log('Success: Firestore offline data enabled.'))
         //  .catch(() => console.log('Failure: Error in enabling firestore offline data.'));
-
-        const settings = { timestampsInSnapshots: true };
-        firestore.settings(settings);
 
         const persistedReducer = persistCombineReducers(persistConfig, reducers);
 
@@ -51,6 +50,9 @@ class App extends Component {
 
         // Enable redux store persistence to make the app retain state offline! 
         const reduxPersistor = persistStore(store);
+
+        // Uncomment this line to clear persisted redux state from the device
+        // reduxPersistor.purge();
 
         return (
             <Provider store={store}>

@@ -1,25 +1,19 @@
 import React, { Component } from 'react';
-import { ListView, Text, View, NetInfo, Linking } from 'react-native';
+import { ListView, Text, View } from 'react-native';
 import { connect } from 'react-redux';
-import { CardSection, Card } from '../common';
+import { CardSection, Card, ListItem, Spinner } from '../common';
 import {
-    routinesFetch,
-    connectionChange
+    routinesFetch
 } from '../../actions';
-
-const Accordion = require('react-native-accordion');
-
-const Difficulty = ['Best program for beginners', 'Fun program for beginners',
-                     'Best program for intermediates', 'Good program for advanced-intermediates'];
 
 class WorkoutList extends Component {
     componentWillMount() {
-        NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
-
-        if (this.props.isConnected) {
-            this.props.routinesFetch();
+        this.props.routinesFetch();
+        
+        // Wait for routines fetch (async action) to finish and then create data source
+        if (!this.props.loading) {
+            this.createDataSource(this.props);
         }
-        this.createDataSource(this.props);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -28,15 +22,6 @@ class WorkoutList extends Component {
         
         this.createDataSource(nextProps);
     }
-
-    componentWillUnmount() {
-        NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectionChange);
-    }
-
-    // Dispatches action with isConnected bool to keep track of user connectivity in redux store
-    handleConnectionChange = (isConnected) => {
-        this.props.connectionChange({ isConnected });
-    };
 
     createDataSource({ routines }) {
         const ds = new ListView.DataSource({
@@ -47,43 +32,22 @@ class WorkoutList extends Component {
     }
 
     renderRow(routine) {
-        const programURL = routine.program_guide;
+        return <ListItem workout={routine} />;
+    }
 
-        const header = (
-            <View>
-                <CardSection style={{ backgroundColor: 'grey', height: 40 }}>
-                    <Text style={{ color: 'white', fontSize: 15 }}>{routine.routine_name}</Text>
+    renderListView() {
+        if (this.props.loading) {
+            return (
+                <CardSection>
+                    <Spinner size='large' />
                 </CardSection>
-            </View>
-        );
-
-        const content = (
-            <View>
-                <CardSection style={{ flexDirection: 'column', marginLeft: 5 }}>
-                    <Text style={{ fontWeight: 'bold' }}>
-                        Program Guide
-                    </Text>
-                    <Text style={{ color: 'blue' }} onPress={() => Linking.openURL(programURL)}>
-                        {routine.program_guide || 'Not Available'}
-                    </Text>
-                    <Text />
-                    <Text style={{ fontWeight: 'bold' }}>
-                        Description
-                    </Text>
-                    <Text>
-                        {Difficulty[routine.level]}
-                    </Text>
-                </CardSection>
-            </View>
-        );
-
+            );
+        }
         return (
-            <Accordion
-                header={header}
-                content={content}
-                easing="easeOutCubic"
-                style={{ marginLeft: 5, marginRight: 5 }}
-                expanded={routine.level === 0}
+            <ListView
+                enableEmptySections
+                dataSource={this.dataSource}
+                renderRow={this.renderRow.bind(this)}
             />
         );
     }
@@ -98,20 +62,16 @@ class WorkoutList extends Component {
                         </Text>
                     </CardSection>
                 </Card>
-                <ListView
-                    enableEmptySections
-                    dataSource={this.dataSource}
-                    renderRow={this.renderRow.bind(this)}
-                />
+                {this.renderListView()}
             </View>
         );
     }   
 }
 
 const mapStateToProps = state => {
-    // workout routines JSON object
-    return { routines: state.routines.public, isConnected: state.connection.isConnected };
+    return { routines: state.workouts.public, 
+             loading: state.workouts.loading };
 };
 
-export default connect(mapStateToProps, { routinesFetch, connectionChange })(WorkoutList);
+export default connect(mapStateToProps, { routinesFetch })(WorkoutList);
 

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "627326368672",
+    "firebase_url": "https://champs-diary.firebaseio.com",
+    "project_id": "champs-diary",
+    "storage_bucket": "champs-diary.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:627326368672:android:99314353cec42ddb",
+        "android_client_info": {
+          "package_name": "com.champs_diary"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "627326368672-5n3uarp44q1ibmrtqb4d4b994g1o1fnt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.champs_diary",
+            "certificate_hash": "6abbd81b6eac25cbcaeae418aea57bce36406815"
+          }
+        },
+        {
+          "client_id": "627326368672-oi7rgscbc3if3auklqkdmq6uc5rr6eud.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgvQlM-U2y-zeYkFDfEl4DDqvS-SlLEBg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "627326368672-oi7rgscbc3if3auklqkdmq6uc5rr6eud.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
