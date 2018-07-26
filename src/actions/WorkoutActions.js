@@ -57,7 +57,7 @@ export const workoutsFetch = (routine_id) => {
         .onSnapshot({ includeMetadataChanges: true }, 
             (querySnapshot) => {
                 querySnapshot.forEach((workout) => {
-                    currentWorkouts.push(workout._data);
+                    currentWorkouts.push({ ...workout._data, id: workout.id });
                 });
                 console.log(currentWorkouts);
                 dispatch({
