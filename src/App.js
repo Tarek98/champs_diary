@@ -17,28 +17,10 @@ export const persistConfig = {
 };
 
 class App extends Component {
-    
-    componentWillMount() {
-        // Initialize Firebase
-        // const config = {
-        //     apiKey: 'AIzaSyBI46wSCauv5zfdpOb0wGnwlRZLYAPgzuE',
-        //     authDomain: 'champs-diary.firebaseapp.com',
-        //     databaseURL: 'https://champs-diary.firebaseio.com',
-        //     projectId: 'champs-diary',
-        //     storageBucket: 'champs-diary.appspot.com',
-        //     messagingSenderId: '627326368672'
-        // };
-        // firebase.initializeApp(config);
-    }
-
     render() {
         const firestore = firebase.firestore();
-
         const settings = { timestampsInSnapshots: true };
         firestore.settings(settings);
-        // firestore.enablePersistence()
-        //  .then(() => console.log('Success: Firestore offline data enabled.'))
-        //  .catch(() => console.log('Failure: Error in enabling firestore offline data.'));
 
         const persistedReducer = persistCombineReducers(persistConfig, reducers);
 

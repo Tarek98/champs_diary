@@ -41,6 +41,7 @@ export const loginUser = ({ email, password }) => {
                         loginUserSuccess(dispatch, user);
                     })
                     .catch((signupError) => {
+                        console.log(signupError);
                         loginUserFail(dispatch, signupError.code);
                     });
             });
@@ -64,7 +65,7 @@ export const logoutUser = () => {
 };
 
 const addUserDataToDB = (userInfo) => {
-    const { uid, email, metadata } = userInfo.user;
+    const { uid, email, metadata } = userInfo._user;
 
     firebase.firestore().doc(`users/${uid}`).set(
         { email, date_created: metadata.creationTime },
@@ -79,11 +80,13 @@ const loginUserFail = (dispatch, errorCode) => {
     });
 };
 
-const loginUserSuccess = (dispatch, user) => {
+const loginUserSuccess = (dispatch, userInfo) => {
     dispatch({
         type: LOGIN_USER_SUCCESS,
-        payload: user
+        payload: userInfo._user
     });
+
+    console.log(userInfo._user);
 
     Actions.main();
 };

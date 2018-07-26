@@ -5,17 +5,17 @@ import {
     WORKOUT_CREATE,
     ROUTINE_FETCH,
     ROUTINE_FETCH_SUCCESS,
-    VIEW_WORKOUT_DETAILS
+    VIEW_WORKOUT_DETAILS,
+    VIEW_ROUTINE_DETAILS
 } from './types';
 
 export const routinesFetch = () => {
     //const { currentUser } = firebase.auth();
-    const allWorkouts = { public: [], user_defined: [] };
+    const allRoutines = { public: [], user_defined: [] };
 
     // auto dispatch action to fetch new data every time '/workouts' documents is updated
     // .onSnapshot() gets real time updates
     return (dispatch) => {
-        console.log('routine fetch');
         dispatch({
             type: ROUTINE_FETCH
         });
@@ -24,13 +24,17 @@ export const routinesFetch = () => {
         .orderBy('level')
         .onSnapshot({ includeMetadataChanges: true },
             (querySnapshot) => {
-                querySnapshot.forEach((workout) => {
-                    allWorkouts.public.push({ ...workout.data(), id: workout.id });
+                querySnapshot.forEach((routine) => {
+                    if (routine.data().public) {
+                        allRoutines.public.push({ ...routine.data(), id: routine.id });
+                    } else {
+                        allRoutines.user_defined.push({ ...routine.data(), id: routine.id });
+                    }
                 });
-                console.log(allWorkouts.public);
+                console.log(allRoutines);
                 dispatch({
                     type: ROUTINE_FETCH_SUCCESS,
-                    payload: allWorkouts
+                    payload: allRoutines
                 });
             }, 
             (error) => {
@@ -40,9 +44,37 @@ export const routinesFetch = () => {
     };
 };
 
-export const viewWorkoutDetails = (routineId) => {
+export const workoutsFetch = (routine_id) => {
+    const currentWorkouts = [];
+    // currentWorkouts.push({ routine_id });
+
+    return (dispatch) => {
+        dispatch({
+            type: ROUTINE_FETCH
+        });
+
+        firebase.firestore().collection(`/workouts/${routine_id}/workout_days/`)
+        .onSnapshot({ includeMetadataChanges: true }, 
+            (querySnapshot) => {
+                querySnapshot.forEach((workout) => {
+                    currentWorkouts.push(workout._data);
+                });
+                console.log(currentWorkouts);
+                dispatch({
+                    type: VIEW_WORKOUT_DETAILS,
+                    payload: currentWorkouts
+                });
+            },
+            (error) => {
+                console.log(error);
+            }
+        );
+    };
+};
+
+export const viewRoutineDetails = (routineId) => {
     return {
-        type: VIEW_WORKOUT_DETAILS,
+        type: VIEW_ROUTINE_DETAILS,
         payload: routineId
     };
 };

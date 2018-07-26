@@ -58,7 +58,7 @@ class WorkoutList extends Component {
                 <Card>
                     <CardSection>
                         <Text>
-                            Tap on the routines below to toggle their details
+                            Tap on the routines below to view their details
                         </Text>
                     </CardSection>
                 </Card>

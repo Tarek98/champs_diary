@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { CardSection } from './CardSection';
-import { viewWorkoutDetails } from '../../actions';
+import { viewRoutineDetails } from '../../actions';
 
 const Difficulty = ['Best program for beginners', 'Fun program for beginners',
                      'Best program for intermediates', 'Good program for advanced-intermediates'];
@@ -55,7 +55,7 @@ class ListItem extends Component {
 
         return (
             <TouchableWithoutFeedback
-                onPress={() => this.props.viewWorkoutDetails(id)}
+                onPress={() => this.props.viewRoutineDetails(id)}
             >
                 <View>
                     <CardSection style={titleCardSection}>
@@ -87,6 +87,6 @@ const mapStateToProps = (state, ownProps) => {
     return { expanded };
 };
 
-const list_item = connect(mapStateToProps, { viewWorkoutDetails })(ListItem);
+const list_item = connect(mapStateToProps, { viewRoutineDetails })(ListItem);
 
 export { list_item as ListItem };

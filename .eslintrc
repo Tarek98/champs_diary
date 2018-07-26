@@ -2,6 +2,7 @@
     "extends": "rallycoding",
     "rules": {
         "arrow-body-style": 1,
-        "camelcase": 0
+        "camelcase": 0,
+        "no-underscore-dangle": 0
     }
 }
