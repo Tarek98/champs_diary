@@ -6,6 +6,7 @@ import TabIcon from './components/common/TabIcon';
 import WorkoutMain from './components/Lifting/WorkoutMain';
 import WorkoutList from './components/Lifting/WorkoutList';
 import WorkoutSelect from './components/Lifting/WorkoutSelect';
+import WorkoutDiary from './components/Lifting/WorkoutDiary';
 import RunningTracker from './components/Running/RunningTracker';
 import SwimmingTracker from './components/Swimming/SwimmingTracker';
 import WeightTracker from './components/WeightCharts/WeightTracker';
@@ -58,6 +59,11 @@ const RouterComponent = () => {
                                 key="workoutSelect"
                                 component={WorkoutSelect}
                                 title="Select Your Workout"
+                            />
+                            <Scene
+                                key="workoutDiary"
+                                component={WorkoutDiary}
+                                title="Track Your Workout"
                             />
                         </Scene>
                         <Scene key="running" title="Run" icon={TabIcon}>

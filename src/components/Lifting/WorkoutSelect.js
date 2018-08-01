@@ -12,7 +12,7 @@ class WorkoutSelect extends Component {
 
     componentWillMount() {
         this.props.routinesFetch();
-        this.DDL2Value = 'None';
+        this.DDL2Value = ' ';
         this.invalidRoutine = true; this.invalidWorkout = true;
 
         if (!this.props.loading) {
@@ -29,7 +29,13 @@ class WorkoutSelect extends Component {
 
     onButtonPress() {
         // First check if user entries are valid
-        // Actions.workoutDiary({ Date: this.props.workoutDate, Routine: this.selectedRoutineId, Workout: this.selectedWorkoutId })
+        if (!this.invalidRoutine && !this.invalidWorkout) {
+            Actions.workoutDiary({ 
+                Date: this.props.workoutDate, 
+                Routine: this.selectedRoutineId, 
+                Workout: this.selectedWorkout 
+            });
+        }
     }
 
     populateDDL1({ routines }) {
@@ -43,7 +49,9 @@ class WorkoutSelect extends Component {
 
         currWorkouts.forEach(workout => {
             if (workout.workout_name) { // If the workout has a name, push it to the drop down list
-                this.DDL2Data.push({ value: workout.workout_name, id: workout.id });
+                this.DDL2Data.push({ value: workout.workout_name, 
+                                     id: workout.id, 
+                                     exercises: workout.exercises });
             } 
         });
     }
@@ -63,17 +71,17 @@ class WorkoutSelect extends Component {
                     <Dropdown
                         label='Routine'
                         data={this.DDL1Data}
-                        value={'None'}
-                        containerStyle={{ flex: 1, paddingLeft: 20 }}
+                        value={' '}
+                        containerStyle={{ flex: 1, paddingLeft: 20, paddingRight: 10 }}
                         onChangeText={(value, index, data) => { 
-                            // Fetch workouts for current routine 
-                            this.props.workoutsFetch(data[index].id);
                             this.selectedRoutineId = data[index].id;
-                            this.invalidRoutine = (value === 'None' || value === 'Unknown');
-                            if (this.DDL2Value === 'None') {
-                                this.DDL2Value = 'Unknown';
+                            this.props.workoutsFetch(this.selectedRoutineId);
+
+                            this.invalidRoutine = (value[0] === ' '); //First character is a space
+                            if (this.DDL2Value === ' ') {
+                                this.DDL2Value = '  ';
                             } else {
-                                this.DDL2Value = 'None';
+                                this.DDL2Value = ' ';
                             }
                         }
                         }
@@ -84,9 +92,8 @@ class WorkoutSelect extends Component {
                         value={this.DDL2Value}
                         containerStyle={{ flex: 1, paddingRight: 20 }}
                         onChangeText={(value, index, data) => {
-                            this.invalidWorkout = (value === 'None' || value === 'Unknown');
-                            this.selectedWorkoutId = data[index].id;
-                            console.log(`Routine: ${this.selectedRoutineId} , Workout: ${this.selectedWorkoutId}`);
+                            this.invalidWorkout = (value[0] === ' ');
+                            this.selectedWorkout = data[index];
                         }}
                     />
                 </CardSection>
