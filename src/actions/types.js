@@ -18,6 +18,7 @@ export const ROUTINE_FETCH_SUCCESS = 'routine_fetch_success';
 export const ROUTINE_SAVE_SUCCESS = 'routine_save_success';
 export const VIEW_WORKOUT_DETAILS = 'view_workout_details';
 export const VIEW_ROUTINE_DETAILS = 'view_routine_details';
+export const SUBMIT_WORKOUT_DIARY = 'submit_workout_diary';
 
 // Connectivity Actions
 export const CONNECTION_STATUS_CHANGED = 'connection_status_changed';

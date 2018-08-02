@@ -6,7 +6,8 @@ import {
     ROUTINE_FETCH,
     ROUTINE_FETCH_SUCCESS,
     VIEW_WORKOUT_DETAILS,
-    VIEW_ROUTINE_DETAILS
+    VIEW_ROUTINE_DETAILS,
+    SUBMIT_WORKOUT_DIARY
 } from './types';
 
 export const routinesFetch = () => {
@@ -78,6 +79,14 @@ export const viewRoutineDetails = (routineId) => {
         payload: routineId
     };
 };
+
+export const submitWorkoutDiary = (current_diary, user_id) => {
+    return (dispatch) => {
+        dispatch({
+            type: SUBMIT_WORKOUT_DIARY
+        });
+    };
+}
 
 export const routineCreate = ({ name }) => {
     const { currentUser } = firebase.auth();
