@@ -19,6 +19,9 @@ export const ROUTINE_SAVE_SUCCESS = 'routine_save_success';
 export const VIEW_WORKOUT_DETAILS = 'view_workout_details';
 export const VIEW_ROUTINE_DETAILS = 'view_routine_details';
 export const SUBMIT_WORKOUT_DIARY = 'submit_workout_diary';
+export const DIARY_SUBMIT_SUCCESS = 'diary_submit_success';
+export const DIARY_SUBMIT_FAILURE = 'diary_submit_failure';
+
 
 // Connectivity Actions
 export const CONNECTION_STATUS_CHANGED = 'connection_status_changed';

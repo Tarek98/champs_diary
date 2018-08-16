@@ -11,6 +11,7 @@ import RunningTracker from './components/Running/RunningTracker';
 import SwimmingTracker from './components/Swimming/SwimmingTracker';
 import WeightTracker from './components/WeightCharts/WeightTracker';
 import SettingsPage from './components/SettingsPage';
+import WorkoutEdit from './components/Lifting/WorkoutEdit';
 
 const RouterComponent = () => {
     return (
@@ -49,6 +50,11 @@ const RouterComponent = () => {
                                 key="workoutMain"
                                 component={WorkoutMain}
                                 title="Your Workouts"
+                            />
+                            <Scene
+                                key="workoutEdit"
+                                component={WorkoutEdit}
+                                title="Customize Workouts"
                             />
                             <Scene
                                 key="workoutList"

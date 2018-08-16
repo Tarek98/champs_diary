@@ -7,7 +7,9 @@ import {
     ROUTINE_FETCH_SUCCESS,
     VIEW_WORKOUT_DETAILS,
     VIEW_ROUTINE_DETAILS,
-    SUBMIT_WORKOUT_DIARY
+    SUBMIT_WORKOUT_DIARY,
+    DIARY_SUBMIT_FAILURE,
+    DIARY_SUBMIT_SUCCESS
 } from './types';
 
 export const routinesFetch = () => {
@@ -82,11 +84,23 @@ export const viewRoutineDetails = (routineId) => {
 
 export const submitWorkoutDiary = (current_diary, user_id) => {
     return (dispatch) => {
-        dispatch({
-            type: SUBMIT_WORKOUT_DIARY
-        });
+        dispatch({ type: SUBMIT_WORKOUT_DIARY });
+
+        const newDiaryEntryRef = 
+            firebase.firestore().collection('users').doc(`${user_id}`).collection('workout_diary')
+            .doc();
+            
+        newDiaryEntryRef.set(current_diary)
+            .then(() => {
+                Actions.workoutMain({ successMsg: 'Your workout was saved successfuly!' });
+                dispatch({ type: DIARY_SUBMIT_SUCCESS });
+            })
+            .catch((error) => {
+                console.log(error);
+                dispatch({ type: DIARY_SUBMIT_FAILURE });
+            });
     };
-}
+};
 
 export const routineCreate = ({ name }) => {
     const { currentUser } = firebase.auth();

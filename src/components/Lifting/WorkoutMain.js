@@ -11,28 +11,50 @@ class WorkoutMain extends Component {
         this.state = { date: Moment().toDate() };
     }
 
+    renderSuccessMsg() {
+        if (this.props.successMsg) {
+            return (
+                <CardSection style={{ justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={{ color: 'green' }}>
+                        {this.props.successMsg}
+                    </Text>
+                </CardSection>
+            );
+        }
+    }
+
     render() {
         return (
             <View>
                 <Card>
                     <CardSection>
-                        <Button>Create a Workout</Button>
+                        <Button 
+                            onPress={() => Actions.workoutEdit({ 
+                            sectionTitle: 'New Workout Routine' 
+                            })}
+                        >
+                            Create a Workout
+                        </Button>
                     </CardSection>
                     <CardSection>
-                        <Button onPress={() => Actions.workoutList()}>View Existing Workouts</Button>
+                        <Button onPress={() => Actions.workoutList()}>
+                            View Existing Workouts
+                        </Button>
                     </CardSection>
                 </Card>
                 <Card>
-                    <CardSection>
+                    <CardSection style={{ justifyContent: 'center', alignItems: 'center' }}>
                         <Text style={{ fontWeight: 'bold' }}>
-                            To track your workout, tap on a date in the calendar
+                            To track your workout, tap on a date below
                         </Text>
                     </CardSection>
                     <CardSection>
                         <Calendar
                             onChange={(date) => {
                                 this.setState({ date });
-                                Actions.workoutSelect({ workoutDate: Moment(date._d).format('DD/MM/YYYY') });
+                                Actions.workoutSelect({
+                                     workoutDate: Moment(date._d).format('DD/MM/YYYY') 
+                                });
                             }}
                             selected={this.state.date}
                             minDate={Moment().subtract(50, 'years').startOf('day')}
@@ -41,6 +63,7 @@ class WorkoutMain extends Component {
                             barView={{ backgroundColor: '#00A86B' }}
                         />
                     </CardSection>
+                    {this.renderSuccessMsg()}
                 </Card>
             </View>
         );

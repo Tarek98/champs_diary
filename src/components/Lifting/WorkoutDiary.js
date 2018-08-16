@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Actions } from 'react-native-router-flux';
 import { ScrollView, View, Text } from 'react-native';
-import { Card, CardSection, Button, Input } from '../common';
+import { Card, CardSection, Button, Input, Spinner } from '../common';
 import { submitWorkoutDiary } from '../../actions';
 
 class WorkoutDiary extends Component {
-
     constructor() {
         super();
         this.state = { errorMsg: '' };
@@ -37,38 +35,25 @@ class WorkoutDiary extends Component {
     }
 
     onWorkoutFinish() {
+        // Clear errors
+        this.setState({ errorMsg: '' }); 
         this.error = false; this.minimumEntriesFilled = false;
+ 
+        this.prepDiaryForSubmit();
 
-        // Error checking to ensure minimum sets requirement & any filled sets is 'complete'
-        // Each 'complete' set must contain a pair of weight and reps (both can't be 0)  
-        for (let x = 0; x < this.current_diary.length; x++) {
-            const exercise = this.current_diary[x];
-            for (let y = 0; y < exercise.num_sets; y++) {
-                const set = exercise['set_' + y];
-                // XOR error check: Reps or weight, but not both, is unknown
-                if ((set.weight === 0) ^ (set.reps === 0)) { 
-                    this.error = true;
-                } else if (this.minimumEntriesFilled === false) {
-                    // If one set of weight and reps is filled, the minimum requirement is met
-                    if ((set.weight !== 0) && (set.reps !== 0)) {
-                        this.minimumEntriesFilled = true;
-                    }
-                }
-            }
-        }
-
-        if ((!this.error) && (this.minimumEntriesFilled)) { // Diary was filled out properly
+        // Checks if diary was filled out properly
+        if ((!this.error) && (this.minimumEntriesFilled)) { 
             this.props.submitWorkoutDiary(
-                 this.current_diary,
+                 this.diary_container,
                  this.props.user.uid
             );
-        } else if (!this.minimumEntriesFilled) {
-            this.setState({ 
-                errorMsg: 'Error: Please record at least one set before saving' 
-            });
-        } else { // this.error = true
+        } else if (this.error) {
             this.setState({ 
                 errorMsg: 'Error: Please record both weight and reps for each set' 
+            });
+        } else { // !minimumEntriesFilled 
+            this.setState({ 
+                errorMsg: 'Error: Please record at least one set before saving' 
             });
         }
     }
@@ -81,22 +66,48 @@ class WorkoutDiary extends Component {
         if (value.length === 0) { 
             curr_entry[entry_type] = 0;
         } else {
-            curr_entry[entry_type] = value;
+            curr_entry[entry_type] = parseInt(value, 10);
+        }
+    }
+
+    // Ensures minimum sets requirement & any filled sets is 'complete'
+    // Each 'complete' set must contain a pair of weight and reps (both can't be 0)
+    prepDiaryForSubmit() {
+        for (let x = 0; x < this.current_diary.length; x++) {
+            const exercise = this.current_diary[x];
+
+            for (let y = 0; y < exercise.num_sets; y++) {
+                const set = exercise['set_' + y];
+                // XOR error check: Reps or weight, but not both, is unknown
+                if ((set.weight === 0) ^ (set.reps === 0)) { 
+                    this.error = true;
+                    // Break out of all loops
+                    return; 
+                } else if (this.minimumEntriesFilled === false) {
+                    // If one set of weight and reps is filled, min requirement satisfied
+                    if ((set.weight !== 0) && (set.reps !== 0)) {
+                        this.minimumEntriesFilled = true;
+                    }
+                }
+            }
         }
     }
 
     renderError() {
-        if (this.state.errorMsg) {
+        if (this.state.errorMsg || this.props.errorMsg) {
             return (
                 <Text style={styles.errorMsgStyle}>
-                    {this.state.errorMsg}
+                    {this.state.errorMsg || this.props.errorMsg}
                 </Text>
             );
+        } else if (this.props.loading) {
+            return <Spinner size="large" />;
         }
     }
 
     renderSets(exercise_info, input_type, exercise_index) {
         const allSets = [];
+        // // To-do: Allow 4 digits with decimal point for each entry?            
 
         for (let i = 0; i < exercise_info.sets; i++) {
             allSets.push(
@@ -119,7 +130,7 @@ class WorkoutDiary extends Component {
         const header = [<Text>{exercise_info.name}</Text>];
 
         if (exercise_info.bw) { // Bodyweight exercise
-            header.push(<Text> (Weight is entred as your bodyweight in this exercise)</Text>);
+            header.push(<Text> (Use bodyweight)</Text>);
             // // To-do: Pre-fill weight fields with user's bodyweight
         }
         
@@ -195,8 +206,9 @@ const styles = {
 const mapStateToProps = state => {
     const { isConnected } = state.connection;
     const { user } = state.auth;
+    const { loading } = state.workouts;
 
-    return { isConnected, user };
+    return { isConnected, user, loading };
 };
 
 export default connect(mapStateToProps, { submitWorkoutDiary })(WorkoutDiary);
