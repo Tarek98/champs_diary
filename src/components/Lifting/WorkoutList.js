@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { ListView, Text, View } from 'react-native';
+import { ListView, Text, View, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import { CardSection, Card, ListItem, Spinner } from '../common';
-import {
-    routinesFetch
-} from '../../actions';
+import { routinesFetch } from '../../actions';
+
+const Difficulty = ['Best program for beginners', 'Fun program for beginners',
+                     'Best program for intermediates', 'Good program for advanced-intermediates'];
 
 class WorkoutList extends Component {
     componentWillMount() {
@@ -31,8 +32,34 @@ class WorkoutList extends Component {
         this.dataSource = ds.cloneWithRows(routines);
     }
 
-    renderRow(routine) {
-        return <ListItem workout={routine} />;
+    renderRow(workout) {
+        return (
+            <ListItem 
+                panelId={workout.id} 
+                cardTitle={workout.routine_name}
+            >
+                <View>
+                    <CardSection style={{ flexDirection: 'column', marginLeft: 5 }}>
+                        <Text style={{ fontWeight: 'bold' }}>
+                            Program Guide
+                        </Text>
+                        <Text 
+                            style={{ color: 'blue' }} 
+                            onPress={() => Linking.openURL(workout.program_guide)}
+                        >
+                            {workout.program_guide || 'Not Available'}
+                        </Text>
+                        <Text />
+                        <Text style={{ fontWeight: 'bold' }}>
+                            Description
+                        </Text>
+                        <Text>
+                            {Difficulty[workout.level]}
+                        </Text>
+                    </CardSection>
+                </View>
+            </ListItem>
+        );
     }
 
     renderListView() {

@@ -17,10 +17,13 @@ export const ROUTINE_FETCH = 'routine_fetch';
 export const ROUTINE_FETCH_SUCCESS = 'routine_fetch_success';
 export const ROUTINE_SAVE_SUCCESS = 'routine_save_success';
 export const VIEW_WORKOUT_DETAILS = 'view_workout_details';
-export const VIEW_ROUTINE_DETAILS = 'view_routine_details';
 export const SUBMIT_WORKOUT_DIARY = 'submit_workout_diary';
 export const DIARY_SUBMIT_SUCCESS = 'diary_submit_success';
 export const DIARY_SUBMIT_FAILURE = 'diary_submit_failure';
+
+
+export const TOGGLE_COLLAPSIBLE = 'toggle_collapsible';
+export const SHUT_COLLAPSIBLES = 'shut_collapsibles';
 
 
 // Connectivity Actions

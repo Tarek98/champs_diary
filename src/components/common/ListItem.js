@@ -1,21 +1,19 @@
 import React, { Component } from 'react';
 import { 
     Text, TouchableWithoutFeedback, Platform,
-    View, LayoutAnimation, Linking, UIManager
+    View, LayoutAnimation, UIManager
 } from 'react-native';
 import { connect } from 'react-redux';
 import { CardSection } from './CardSection';
-import { viewRoutineDetails } from '../../actions';
-
-const Difficulty = ['Best program for beginners', 'Fun program for beginners',
-                     'Best program for intermediates', 'Good program for advanced-intermediates'];
+import { expandPanel } from '../../actions';
 
 class ListItem extends Component {
     constructor() {
         super();
 
         if (Platform.OS === 'android') {
-            UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+            UIManager.setLayoutAnimationEnabledExperimental 
+                && UIManager.setLayoutAnimationEnabledExperimental(true);
         }
     }
 
@@ -24,26 +22,11 @@ class ListItem extends Component {
     }
 
     renderDescription() {
-        const { workout, expanded } = this.props;
-
+        const { expanded, children } = this.props;
         if (expanded) {
             return (
                 <View>
-                    <CardSection style={{ flexDirection: 'column', marginLeft: 5 }}>
-                        <Text style={{ fontWeight: 'bold' }}>
-                            Program Guide
-                        </Text>
-                        <Text style={{ color: 'blue' }} onPress={() => Linking.openURL(workout.program_guide)}>
-                            {workout.program_guide || 'Not Available'}
-                        </Text>
-                        <Text />
-                        <Text style={{ fontWeight: 'bold' }}>
-                            Description
-                        </Text>
-                        <Text>
-                            {Difficulty[workout.level]}
-                        </Text>
-                    </CardSection>
+                    {children}
                 </View>
             );
         }
@@ -51,15 +34,15 @@ class ListItem extends Component {
 
     render() {
         const { titleStyle, titleCardSection } = styles;
-        const { routine_name, id } = this.props.workout;
+        const { panelId, headerStyle } = this.props;
 
         return (
             <TouchableWithoutFeedback
-                onPress={() => this.props.viewRoutineDetails(id)}
+                onPress={() => this.props.expandPanel(panelId)}
             >
                 <View>
-                    <CardSection style={titleCardSection}>
-                        <Text style={titleStyle}>{routine_name}</Text>
+                    <CardSection style={[titleCardSection, headerStyle]}>
+                        <Text style={titleStyle}>{this.props.cardTitle}</Text>
                     </CardSection>
                     {this.renderDescription()}
                 </View>
@@ -82,11 +65,12 @@ const styles = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-    const expanded = (state.workouts.selectedWorkoutId === ownProps.workout.id);
+    const expanded = (state.workouts.selectedPanelId !== 'none' 
+        && state.workouts.selectedPanelId === ownProps.panelId);
 
     return { expanded };
 };
 
-const list_item = connect(mapStateToProps, { viewRoutineDetails })(ListItem);
+const list_item = connect(mapStateToProps, { expandPanel })(ListItem);
 
 export { list_item as ListItem };

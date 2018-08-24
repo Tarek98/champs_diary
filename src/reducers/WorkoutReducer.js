@@ -2,7 +2,8 @@ import {
     ROUTINE_FETCH,
     ROUTINE_FETCH_SUCCESS,
     VIEW_WORKOUT_DETAILS,
-    VIEW_ROUTINE_DETAILS,
+    TOGGLE_COLLAPSIBLE,
+    SHUT_COLLAPSIBLES,
     SUBMIT_WORKOUT_DIARY,
     DIARY_SUBMIT_SUCCESS,
     DIARY_SUBMIT_FAILURE
@@ -19,8 +20,10 @@ import {
             return { ...action.payload, loading: false };
         case VIEW_WORKOUT_DETAILS:
             return { ...state, currentWorkouts: action.payload, loading: false };
-        case VIEW_ROUTINE_DETAILS:
-            return { ...state, selectedWorkoutId: action.payload };
+        case TOGGLE_COLLAPSIBLE:
+            return { ...state, selectedPanelId: action.payload };
+        case SHUT_COLLAPSIBLES:
+            return { ...state, selectedPanelId: 'none' };
         case DIARY_SUBMIT_SUCCESS: 
             return { ...state, loading: false };
         case DIARY_SUBMIT_FAILURE:

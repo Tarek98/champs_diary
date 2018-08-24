@@ -6,10 +6,11 @@ import {
     ROUTINE_FETCH,
     ROUTINE_FETCH_SUCCESS,
     VIEW_WORKOUT_DETAILS,
-    VIEW_ROUTINE_DETAILS,
+    TOGGLE_COLLAPSIBLE,
     SUBMIT_WORKOUT_DIARY,
     DIARY_SUBMIT_FAILURE,
-    DIARY_SUBMIT_SUCCESS
+    DIARY_SUBMIT_SUCCESS,
+    SHUT_COLLAPSIBLES
 } from './types';
 
 export const routinesFetch = () => {
@@ -75,10 +76,16 @@ export const workoutsFetch = (routine_id) => {
     };
 };
 
-export const viewRoutineDetails = (routineId) => {
+export const expandPanel = (panelId) => {
     return {
-        type: VIEW_ROUTINE_DETAILS,
-        payload: routineId
+        type: TOGGLE_COLLAPSIBLE,
+        payload: panelId
+    };
+};
+
+export const closePanels = () => {
+    return {
+        type: SHUT_COLLAPSIBLES
     };
 };
 
