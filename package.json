@@ -12,6 +12,7 @@
     "firebase": "^5.2.0",
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
+    "q": "^1.5.1",
     "react": "16.4.1",
     "react-native": "0.56.0",
     "react-native-calendar-datepicker": "^1.2.2",

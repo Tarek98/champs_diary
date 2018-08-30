@@ -1,27 +1,25 @@
 import { Actions } from 'react-native-router-flux';
 import firebase from 'react-native-firebase';
 import {
-    ROUTINE_CREATE,
-    WORKOUT_CREATE,
-    ROUTINE_FETCH,
+    REQUEST_INIT,
+    ROUTINE_CREATED,
     ROUTINE_FETCH_SUCCESS,
     VIEW_WORKOUT_DETAILS,
     TOGGLE_COLLAPSIBLE,
-    SUBMIT_WORKOUT_DIARY,
-    DIARY_SUBMIT_FAILURE,
     DIARY_SUBMIT_SUCCESS,
-    SHUT_COLLAPSIBLES
+    SHUT_COLLAPSIBLES,
+    WORKOUTS_UPDATED,
+    REQUEST_FAILURE
 } from './types';
 
 export const routinesFetch = () => {
-    //const { currentUser } = firebase.auth();
     const allRoutines = { public: [], user_defined: [] };
 
     // auto dispatch action to fetch new data every time '/workouts' documents is updated
     // .onSnapshot() gets real time updates
     return (dispatch) => {
         dispatch({
-            type: ROUTINE_FETCH
+            type: REQUEST_INIT
         });
 
         firebase.firestore().collection('/workouts/')
@@ -54,7 +52,7 @@ export const workoutsFetch = (routine_id) => {
 
     return (dispatch) => {
         dispatch({
-            type: ROUTINE_FETCH
+            type: REQUEST_INIT
         });
 
         firebase.firestore().collection(`/workouts/${routine_id}/workout_days/`)
@@ -89,9 +87,15 @@ export const closePanels = () => {
     };
 };
 
+export const updateComplete = () => {
+    return {
+        type: WORKOUTS_UPDATED
+    };
+};
+
 export const submitWorkoutDiary = (current_diary, user_id) => {
     return (dispatch) => {
-        dispatch({ type: SUBMIT_WORKOUT_DIARY });
+        dispatch({ type: REQUEST_INIT });
 
         const newDiaryEntryRef = 
             firebase.firestore().collection('users').doc(`${user_id}`).collection('workout_diary')
@@ -104,38 +108,87 @@ export const submitWorkoutDiary = (current_diary, user_id) => {
             })
             .catch((error) => {
                 console.log(error);
-                dispatch({ type: DIARY_SUBMIT_FAILURE });
+                dispatch({ type: REQUEST_FAILURE });
             });
     };
 };
 
-export const routineCreate = ({ name }) => {
-    const { currentUser } = firebase.auth();
-
+export const routineCreate = (routine_name, user_id) => {
     return (dispatch) => {
-        firebase.firestore().doc(`/users/${currentUser.uid}/workout_routines`).add({
-            name
+        dispatch({ type: REQUEST_INIT });
+
+        const workoutsRef = firebase.firestore().collection('workouts');
+        const query1 = workoutsRef.where('public', '==', true);
+        const query2 = workoutsRef.where('created_by', '==', user_id);
+
+        // If the routine name already exists in DB -> Error Check 1
+        query1.get()
+        .then(q1Snapshot => {
+            console.log('query1');
+            q1Snapshot.forEach(doc => {
+                if (routine_name === doc._data.routine_name) {
+                    dispatch({ type: REQUEST_FAILURE,
+                            payload: 'Error: Routine name already in use by the app' });
+                    throw new Error('Error: Cannot submit already existing routine name');
+                }
+            });
+
+            return; 
         })
         .then(() => {
-            dispatch({ type: ROUTINE_CREATE });
-            Actions.pop();
+            // If the routine name has already been used by this user in DB -> Error Check 2
+            query2.get()
+            .then(q2Snapshot => {
+                console.log('query2');
+                q2Snapshot.forEach(doc => {
+                    if (routine_name === doc._data.routine_name) {
+                        dispatch({ type: REQUEST_FAILURE,
+                                payload: 
+                                'Error: You have already created a routine with the same name' });
+                        throw new Error('Error: Cannot submit already existing routine name');
+                    }
+                });
+
+                return;
+            })
+            .then(() => {
+                console.log('workout_add');
+                // Add the workout to DB if all error checks passed
+                workoutsRef.add({
+                    routine_name,
+                    created_by: user_id,
+                    public: false
+                })
+                .then((docRef) => {
+                    dispatch({ type: ROUTINE_CREATED, payload: docRef.id });
+                })
+                .catch((error) => {
+                    console.log(error);
+                    dispatch({ type: REQUEST_FAILURE });
+                });
+            })
+            .catch((error) => console.log(error));
         })
         .catch((error) => console.log(error));
     };
 };
 
-export const workoutCreate = ({ workout_name, routine_name, exercises }) => {
-    const { currentUser } = firebase.auth();
-
+export const workoutCreate = (routine_id, workout_name, exercises) => {
     return (dispatch) => {
-        firebase.firestore().doc(`/users/${currentUser.uid}/workout_routines/workouts`).add({
+        const routineRef = firebase.firestore()
+                            .collection('workouts').doc(`${routine_id}`).collection('workout_days')
+                            .doc();
+
+        routineRef.set({
             workout_name,
-            routine_name,
             exercises
         })
-        .then(() => {
-            dispatch({ type: WORKOUT_CREATE });
-            Actions.pop();
+        .then(() => { 
+            console.log(`${workout_name} has been submitted for routine_id: ${routine_id}`); 
+        })
+        .catch(error => {
+            console.log(error);
+            dispatch({ type: REQUEST_FAILURE });
         });
     };
 };

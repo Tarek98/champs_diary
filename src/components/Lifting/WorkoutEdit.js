@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { View, Text, ScrollView, Switch } from 'react-native';
 import { connect } from 'react-redux';
 import { Dropdown } from 'react-native-material-dropdown';
-import { CardSection, Input, Card, Button, ListItem } from '../common';
-import { closePanels } from '../../actions';
+import { CardSection, Input, Card, Button, ListItem, Spinner } from '../common';
+import { closePanels, routineCreate, workoutCreate, updateComplete } from '../../actions';
 
 class WorkoutEdit extends Component {
     constructor() {
@@ -15,28 +15,119 @@ class WorkoutEdit extends Component {
         for (let i = 1; i < 8; i++) {
             this.dropdown_data.push({ value: i });
             numExercises.push(1); // Assuming all workout days have 1 exercise initially
-            workout_details.push({ name: '' });
+            workout_details.push({ name: '', exercises: [] });
             for (let j = 0; j < 10; j++) {
-                workout_details[i - 1]['exercise_' + j] = { bw: false };
+                workout_details[i - 1].exercises.push({ 
+                    bw: false, name: '', sets: '', target_reps: '' 
+                });
             }
         }
 
         console.log(workout_details);
         
-        this.state = { numWorkouts: 1, exercises_per_workout: numExercises, workout_details }; 
+        this.state = { 
+            routine_name: '', 
+            numWorkouts: 1,
+            exercises_per_workout: numExercises, 
+            workout_details,
+            error: ''
+        }; 
     }
 
     componentWillMount() {
         this.props.closePanels();
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.initiateWorkoutSave && nextProps.routineId !== this.props.routineId) {
+            for (let i = 0; i < this.state.numWorkouts; i++) {
+                const element = this.state.workout_details[i];
+                const numExercises = this.state.exercises_per_workout[i];
+                const exercises = element.exercises.slice(0, numExercises);
+
+                this.props.workoutCreate(nextProps.routineId, element.name, exercises);
+            }
+            this.props.updateComplete();
+        }
+    }
+
+    onSaveButton() {
+        // Error checking to determine if workout can be submitted
+        if (this.state.routine_name !== '') {
+            // Hasmaps used to check for duplicate workout names
+            const hashMap1 = {};
+
+            for (let i = 0; i < this.state.numWorkouts; i++) {
+                const currWorkout = this.state.workout_details[i];
+
+                if (currWorkout.name !== '' && hashMap1[currWorkout.name] !== 'occupied') {
+                    hashMap1[currWorkout.name] = 'occupied';
+
+                    const hashMap2 = {};
+
+                    for (let j = 0; j < this.state.exercises_per_workout[i]; j++) {
+                        const currExercise = currWorkout.exercises[j];
+                        
+                        if ((currExercise.name === '' || currExercise.sets === '') 
+                                || hashMap2[currExercise.name] === 'occupied') {
+                            this.setState({ 
+                                error:
+                                 'Error: exercises must have unique names and non-empty sets' 
+                            });
+                            return;
+                        }
+
+                        hashMap2[currExercise.name] = 'occupied';
+                    }
+                } else {
+                    this.setState({ error: 'Error: all workout days must have a unique name' });
+                    return;
+                }
+            }
+        } else {
+            this.setState({ error: 'Error: the workout routine must have a name' });
+            return;
+        }
+
+        // Clear error if all checks are passed
+        this.setState({ error: '' });
+
+        // Saves routine in DB, returns routineId + initiateWorkoutUpdate props
+        // In ComponentWillRecieveProps, response is triggerred to save workouts in the routine
+        this.props.routineCreate(this.state.routine_name, this.props.user.uid);
+    }
+
     updateExercise(workout_day, i, detail_type, value) {
         this.setState(prevState => {
             const new_details = prevState.workout_details;
-            new_details[workout_day]['exercise_' + i][detail_type] = value;
-            console.log(new_details);
+            new_details[workout_day].exercises[i][detail_type] 
+                = (detail_type === 'sets' || detail_type === 'target_reps')
+                 ? parseInt(value, 10) : value;
             return { workout_details: new_details };
         });
+    }
+
+    renderExerciseInputs(workout_day, index) {
+        const input_fields = [];
+        const input_names = ['name', 'sets', 'target_reps'];
+        const placeholders = ['Name', '3', '6'];
+
+        for (let fieldN = 0; fieldN < input_names.length; fieldN++) {
+            const curr_field = input_names[fieldN];
+            input_fields.push(
+                <Input
+                    value={this.state.workout_details[workout_day].exercises[index][curr_field]}
+                    placeholder={placeholders[fieldN]}
+                    inputType={curr_field === 'name' ? 'default' : 'numeric'}
+                    hideLabel
+                    inputTextStyle={{ fontSize: 14 }}
+                    onChangeText={value =>
+                        this.updateExercise(workout_day, index, curr_field, value)}
+                />
+            );
+        }
+
+        return input_fields;
     }
 
     renderExercises(workout_day) {
@@ -46,30 +137,10 @@ class WorkoutEdit extends Component {
             exercises.push(
                 <View>
                     <CardSection style={[styles.exerciseTable, { paddingRight: 32 }]}>
-                        <Input
-                            placeholder="Name"
-                            hideLabel
-                            inputTextStyle={{ fontSize: 14 }}
-                            onChangeText={value =>
-                                 this.updateExercise(workout_day, i, 'name', value)}
-                        />
-                        <Input
-                            placeholder="3"
-                            hideLabel
-                            inputTextStyle={{ fontSize: 14 }}
-                            onChangeText={value => 
-                                this.updateExercise(workout_day, i, 'sets', value)}
-                        />
-                        <Input
-                            placeholder="6"
-                            hideLabel
-                            inputTextStyle={{ fontSize: 14 }}
-                            onChangeText={value => 
-                                this.updateExercise(workout_day, i, 'target_reps', value)}
-                        />
+                        {this.renderExerciseInputs(workout_day, i)}
                         <Switch 
                             value={
-                                this.state.workout_details[workout_day]['exercise_' + i].bw
+                                this.state.workout_details[workout_day].exercises[i].bw
                             }
                             onValueChange={value => 
                                 this.updateExercise(workout_day, i, 'bw', value)}
@@ -94,10 +165,18 @@ class WorkoutEdit extends Component {
                 >
                     <CardSection>
                         <Input 
+                            value={this.state.workout_details[i].name}
                             label="Name" 
                             placeholder="Workout B" 
                             labelStyle={styles.inputLabel}
                             inputTextStyle={styles.inputText}
+                            onChangeText={value => {
+                                this.setState(prevState => {
+                                    const new_details = prevState.workout_details;
+                                    new_details[i].name = value;
+                                    return { workout_details: new_details };
+                                });
+                            }}
                         />
                     </CardSection>
                     <CardSection>
@@ -129,6 +208,35 @@ class WorkoutEdit extends Component {
         return workoutDays;
     }
 
+    renderButton() {
+        if (!this.props.loading) {
+            return (
+                <CardSection>
+                    <Button onPress={() => { this.onSaveButton(); }}>
+                        Save Workout Routine
+                    </Button>
+                </CardSection>
+            );
+        }
+        return (
+            <CardSection>
+                <Spinner size="large" />
+            </CardSection>
+        );
+    }
+
+    renderError() {
+        if (this.state.error || this.props.errorMsg) {
+            return (
+                <CardSection style={{ justifyContent: 'center' }}>
+                    <Text style={styles.errorMsgStyle}>
+                        {this.state.error || this.props.errorMsg}
+                    </Text>
+                </CardSection>
+            );
+        } 
+    }
+
     render() {
         return (
             <ScrollView style={{ marginBottom: 12 }}>
@@ -138,10 +246,12 @@ class WorkoutEdit extends Component {
                     </CardSection>
                     <CardSection>
                         <Input 
+                            value={this.state.routine_name}
                             label="Name" 
                             placeholder="My Workout Routine"
                             labelStyle={styles.inputLabel}
                             inputTextStyle={styles.inputText}
+                            onChangeText={value => { this.setState({ routine_name: value }); }}
                         />
                     </CardSection>
                     <CardSection>
@@ -157,17 +267,14 @@ class WorkoutEdit extends Component {
 
                 <Card>
                     <CardSection>
-                        <Text>Tap the workout day(s) below to view or edit them</Text>
+                        <Text>Tap on the workout day(s) below to view or edit them</Text>
                     </CardSection>
                     {this.renderWorkoutDays()}
                 </Card>
 
                 <Card>
-                    <CardSection>
-                        <Button>
-                            Save Workout Routine
-                        </Button>
-                    </CardSection>
+                    {this.renderButton()}
+                    {this.renderError()}
                 </Card>
             </ScrollView>
         );
@@ -200,7 +307,20 @@ const styles = {
     exerciseTable: {
         justifyContent: 'space-between',
         padding: 10
+    },
+    errorMsgStyle: {
+        fontSize: 14,
+        alignSelf: 'center',
+        color: 'red'
     }
 };
 
-export default connect(null, { closePanels })(WorkoutEdit);
+const mapStateToProps = state => {
+    const { loading, routineId, initiateWorkoutSave, errorMsg } = state.workouts;
+    const { user } = state.auth;
+
+    return { loading, routineId, initiateWorkoutSave, user, errorMsg };
+};
+
+export default connect(mapStateToProps, 
+    { closePanels, routineCreate, workoutCreate, updateComplete })(WorkoutEdit);

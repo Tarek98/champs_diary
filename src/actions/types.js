@@ -9,18 +9,14 @@ export const LOGOUT_SUCCESS = 'logout_success';
 export const LOGOUT_FAIL = 'logout_fail';
 
 // Workout Actions
-export const ROUTINE_CREATE = 'routine_create';
+export const REQUEST_INIT = 'request_initialized';
+export const REQUEST_FAILURE = 'request_failure';
+export const ROUTINE_CREATED = 'routine_created';
 export const ROUTINE_UPDATE = 'routine_update';
-export const WORKOUT_CREATE = 'workout_create';
-export const WORKOUT_UPDATE = 'workout_update';
-export const ROUTINE_FETCH = 'routine_fetch';
+export const WORKOUTS_UPDATED = 'workouts_updated';
 export const ROUTINE_FETCH_SUCCESS = 'routine_fetch_success';
-export const ROUTINE_SAVE_SUCCESS = 'routine_save_success';
 export const VIEW_WORKOUT_DETAILS = 'view_workout_details';
-export const SUBMIT_WORKOUT_DIARY = 'submit_workout_diary';
 export const DIARY_SUBMIT_SUCCESS = 'diary_submit_success';
-export const DIARY_SUBMIT_FAILURE = 'diary_submit_failure';
-
 
 export const TOGGLE_COLLAPSIBLE = 'toggle_collapsible';
 export const SHUT_COLLAPSIBLES = 'shut_collapsibles';
