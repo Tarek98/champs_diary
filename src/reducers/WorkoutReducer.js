@@ -5,6 +5,7 @@ import {
     TOGGLE_COLLAPSIBLE,
     SHUT_COLLAPSIBLES,
     DIARY_SUBMIT_SUCCESS,
+    DIARY_HISTORY_FETCHED,
     REQUEST_FAILURE,
     ROUTINE_CREATED,
     WORKOUTS_UPDATED
@@ -26,9 +27,11 @@ import {
         case WORKOUTS_UPDATED:
             return { ...state, initiateWorkoutSave: false, loading: false };                
         case ROUTINE_FETCH_SUCCESS:
-            return { ...action.payload, loading: false };
+            return { allRoutines: action.payload, loading: false };
         case DIARY_SUBMIT_SUCCESS: 
             return { ...state, loading: false };
+        case DIARY_HISTORY_FETCHED:
+            return { ...state, diaryHistory: action.payload, loading: false };
         case VIEW_WORKOUT_DETAILS:
             return { ...state, currentWorkouts: action.payload, loading: false };
         case TOGGLE_COLLAPSIBLE:

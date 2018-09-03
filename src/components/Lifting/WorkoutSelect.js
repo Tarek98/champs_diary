@@ -1,17 +1,23 @@
 import React, { Component } from 'react';
+import { View, Text, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { Dropdown } from 'react-native-material-dropdown';
-import { Input, CardSection, Card, Button } from '../common';
+import { Input, CardSection, Card, Button, ListItem, Spinner, Confirm } from '../common';
 import {
     routinesFetch,
-    workoutsFetch
+    workoutsFetch,
+    getWorkoutDiaryHistory,
+    workoutDiaryDelete
 } from '../../actions';
 
 class WorkoutSelect extends Component {
+    state = { showModal: false };
 
     componentWillMount() {
-        this.props.routinesFetch();
+        this.props.getWorkoutDiaryHistory(this.props.user.uid, this.props.workoutDate);
+        this.props.routinesFetch(this.props.user.uid);
+
         this.DDL2Value = ' ';
         this.invalidRoutine = true; this.invalidWorkout = true;
 
@@ -30,16 +36,20 @@ class WorkoutSelect extends Component {
     onButtonPress() {
         // First check if user entries are valid
         if (!this.invalidRoutine && !this.invalidWorkout) {
+            const selectedRoutine = { name: this.selectedRoutineName, id: this.selectedRoutineId };
+
             Actions.workoutDiary({ 
                 Date: this.props.workoutDate, 
-                Routine: this.selectedRoutineId, 
-                Workout: this.selectedWorkout 
+                Routine: selectedRoutine, 
+                Workout: this.selectedWorkout,
+                diaryToEdit: null
             });
         }
     }
 
     populateDDL1({ routines }) {
         this.DDL1Data = [];
+
         routines.forEach(routine => 
             this.DDL1Data.push({ value: routine.routine_name, id: routine.id }));
     }
@@ -56,62 +66,153 @@ class WorkoutSelect extends Component {
         });
     }
 
-    render() {
+    renderWorkoutHistory() {
+        const prevDiaries = this.props.diaryHistory;
+
+        if (this.props.loading) {
+            return (
+                <Card>
+                    <CardSection>
+                        <Spinner />
+                    </CardSection>
+                </Card>
+            );
+        } else if ((prevDiaries === undefined || prevDiaries.length === 0) 
+                || prevDiaries[0].date !== this.props.workoutDate) {
+            return null;
+        }
         return (
             <Card>
                 <CardSection>
-                    <Input
-                        label='Date'
-                        placeholder='DD/MM/YYYY'
-                        value={this.props.workoutDate}
-                        editable={false}
-                    />
+                    <Text>Workout History for {this.props.workoutDate}</Text>
                 </CardSection>
                 <CardSection>
-                    <Dropdown
-                        label='Routine'
-                        data={this.DDL1Data}
-                        value={' '}
-                        containerStyle={{ flex: 1, paddingLeft: 20, paddingRight: 10 }}
-                        onChangeText={(value, index, data) => { 
-                            this.selectedRoutineId = data[index].id;
-                            this.props.workoutsFetch(this.selectedRoutineId);
-
-                            this.invalidRoutine = (value[0] === ' '); //First character is a space
-                            if (this.DDL2Value === ' ') {
-                                this.DDL2Value = '  ';
-                            } else {
-                                this.DDL2Value = ' ';
-                            }
-                        }
+                    <FlatList
+                        data={prevDiaries}
+                        renderItem={({ item }) => 
+                            <ListItem
+                                panelId={item.id}
+                                cardTitle={
+                                    `${item.routine.name} : ${item.workout.name}`
+                                }
+                                headerStyle={{ marginLeft: 0, marginRight: 0 }}
+                            >
+                                <CardSection style={{ flexDirection: 'column' }}>
+                                    <Button 
+                                        onPress={() => {
+                                            Actions.workoutDiary({
+                                                diaryToEdit: item
+                                            });
+                                        }}
+                                        styling={{ marginLeft: 75, marginRight: 75 }}
+                                    >
+                                        View workout details
+                                    </Button>
+                                    <Text />
+                                    <Button
+                                        onPress={() => {
+                                            this.setState({ showModal: !this.state.showModal });
+                                        }}
+                                        styling={{ marginLeft: 75, 
+                                            marginRight: 75, 
+                                            backgroundColor: 'red' }}
+                                    >   
+                                        Delete workout entry    
+                                    </Button>
+                                </CardSection>
+                            </ListItem>
                         }
                     />
-                    <Dropdown
-                        label='Workout'
-                        data={this.DDL2Data}
-                        value={this.DDL2Value}
-                        containerStyle={{ flex: 1, paddingRight: 20 }}
-                        onChangeText={(value, index, data) => {
-                            this.invalidWorkout = (value[0] === ' ');
-                            this.selectedWorkout = data[index];
-                        }}
-                    />
-                </CardSection>
-                <CardSection>
-                    <Button onPress={this.onButtonPress.bind(this)}>
-                        Start Tracking
-                    </Button>
                 </CardSection>
             </Card>
+        );
+    }
+
+    render() {
+        return (
+            <View>
+                <Card>
+                    <CardSection>
+                        <Input
+                            label='Date'
+                            placeholder='DD/MM/YYYY'
+                            value={this.props.workoutDate}
+                            editable={false}
+                        />
+                    </CardSection>
+                    <CardSection>
+                        <Dropdown
+                            label='Routine'
+                            data={this.DDL1Data}
+                            value={' '}
+                            containerStyle={{ flex: 1, paddingLeft: 20, paddingRight: 10 }}
+                            onChangeText={(value, index, data) => { 
+                                this.selectedRoutineName = value;
+                                this.selectedRoutineId = data[index].id;
+                                this.props.workoutsFetch(this.selectedRoutineId);
+
+                                // Invalid: First character is a space
+                                this.invalidRoutine = (value[0] === ' '); 
+
+                                if (this.DDL2Value === ' ') {
+                                    this.DDL2Value = '  ';
+                                } else {
+                                    this.DDL2Value = ' ';
+                                }
+                            }
+                            }
+                        />
+                        <Dropdown
+                            label='Workout'
+                            data={this.DDL2Data}
+                            value={this.DDL2Value}
+                            containerStyle={{ flex: 1, paddingRight: 20 }}
+                            onChangeText={(value, index, data) => {
+                                this.invalidWorkout = (value[0] === ' ');
+                                this.selectedWorkout = data[index];
+                            }}
+                        />
+                    </CardSection>
+                    <CardSection>
+                        <Button 
+                            onPress={this.onButtonPress.bind(this)}
+                            styling={{ backgroundColor: 'green' }}
+                        >
+                            Start Tracking
+                        </Button>
+                    </CardSection>
+                </Card>
+                {this.renderWorkoutHistory()}
+                <Confirm
+                    visible={this.state.showModal}
+                    onAccept={() => {
+                        this.props.workoutDiaryDelete(this.props.user.uid, 
+                            this.props.selectedPanelId);
+                        this.setState({ showModal: false });
+                    }}
+                    onDecline={() => {
+                        this.setState({ showModal: false });
+                    }}
+                >
+                    Are you sure you want to delete this entry?
+                </Confirm>
+            </View>
         );
     }
 }
 
 const mapStateToProps = state => {
-    return { routines: state.workouts.public, 
-             currWorkouts: state.workouts.currentWorkouts,
-             loading: state.workouts.loading
+    const { allRoutines, currentWorkouts, diaryHistory, loading, selectedPanelId } = state.workouts;
+    const { user } = state.auth;
+
+    return { routines: allRoutines, 
+             currWorkouts: currentWorkouts,
+             diaryHistory,
+             loading, 
+             selectedPanelId,
+             user
             };
 };
 
-export default connect(mapStateToProps, { routinesFetch, workoutsFetch })(WorkoutSelect);
+export default connect(mapStateToProps, 
+    { routinesFetch, workoutsFetch, getWorkoutDiaryHistory, workoutDiaryDelete })(WorkoutSelect);

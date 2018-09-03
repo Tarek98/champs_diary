@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { ScrollView, View, Text } from 'react-native';
+import { ScrollView, Text } from 'react-native';
 import { Card, CardSection, Button, Input, Spinner } from '../common';
 import { submitWorkoutDiary } from '../../actions';
 
@@ -11,27 +11,33 @@ class WorkoutDiary extends Component {
     }
 
     componentWillMount() {
-        this.exercises_arr = this.props.Workout.exercises;
-        this.diary_container = { 
-            date: this.props.Date,
-            workout_id: this.props.Workout.id,
-            routine_id: this.props.Routine 
-        };
-        this.current_diary = [];
+        if (this.props.diaryToEdit !== null) { // if editing a previous diary
+            this.diary_container = this.props.diaryToEdit;
+            this.current_diary = this.diary_container.diary_entries;
+            this.exercises_arr = this.current_diary;
+        } else { // setup new diary
+            this.exercises_arr = this.props.Workout.exercises;
+            this.diary_container = { 
+                date: this.props.Date,
+                workout: { id: this.props.Workout.id, name: this.props.Workout.value },
+                routine: { id: this.props.Routine.id, name: this.props.Routine.name }
+            };
+            this.current_diary = [];
 
-        // Pre-fill all sets for each exercise in the journal with 0 weight and 0 reps (unknown)
-        for (let j = 0; j < this.exercises_arr.length; j++) {
-            const element = this.exercises_arr[j];
-            const diary_obj = { name: element.name, num_sets: element.sets };
+            // Pre-fill all sets for each exercise in the journal with 0 weight and 0 reps (unknown)
+            for (let j = 0; j < this.exercises_arr.length; j++) {
+                const element = this.exercises_arr[j];
+                const diary_obj = { name: element.name, sets: element.sets };
 
-            for (let k = 0; k < element.sets; k++) {
-                diary_obj['set_' + k] = { weight: 0, reps: 0 };
+                for (let k = 0; k < element.sets; k++) {
+                    diary_obj['set_' + k] = { weight: 0, reps: 0 };
+                }
+
+                this.current_diary.push(diary_obj);
             }
 
-            this.current_diary.push(diary_obj);
+            this.diary_container.diary_entries = this.current_diary;
         }
-
-        this.diary_container.diary_entries = this.current_diary;
     }
 
     onWorkoutFinish() {
@@ -76,7 +82,7 @@ class WorkoutDiary extends Component {
         for (let x = 0; x < this.current_diary.length; x++) {
             const exercise = this.current_diary[x];
 
-            for (let y = 0; y < exercise.num_sets; y++) {
+            for (let y = 0; y < exercise.sets; y++) {
                 const set = exercise['set_' + y];
                 // XOR error check: Reps or weight, but not both, is unknown
                 if ((set.weight === 0) ^ (set.reps === 0)) { 
@@ -110,8 +116,12 @@ class WorkoutDiary extends Component {
         // // To-do: Allow 4 digits with decimal point for each entry?            
 
         for (let i = 0; i < exercise_info.sets; i++) {
+            const currVal = this.current_diary[exercise_index]['set_' + i][input_type];
+            const currInputLabel = (currVal === 0) ? '' : currVal;
             allSets.push(
                 <Input 
+                    value={String(currInputLabel)}
+                    editable={this.props.diaryToEdit === null}
                     placeholder='___' 
                     inputTextStyle={styles.inputStyle}
                     inputType='numeric'
@@ -127,7 +137,7 @@ class WorkoutDiary extends Component {
     }
 
     renderExerciseHeader(exercise_info) {
-        const header = [<Text>{exercise_info.name}</Text>];
+        const header = [<Text style={{ color: 'white' }}>{exercise_info.name}</Text>];
 
         if (exercise_info.bw) { // Bodyweight exercise
             header.push(<Text> (Use bodyweight)</Text>);
@@ -140,18 +150,22 @@ class WorkoutDiary extends Component {
     renderExercises() {
         const exercises_view = this.exercises_arr.map((exercise_info, index) => {
             return (
-                <Card>
-                    <CardSection>
+                <Card style={{ borderColor: 'steelblue', borderBottomWidth: 1 }}> 
+                    <CardSection style={{ backgroundColor: 'steelblue' }}>
                         {this.renderExerciseHeader(exercise_info)}
                     </CardSection>
-                    <CardSection>
-                        <Text>Weight</Text>
+                    <CardSection style={styles.inputHeaderContainer}>
+                        <Text style={styles.inputHeaderText}>
+                            Weight
+                        </Text>
                     </CardSection>
                     <CardSection>
                         {this.renderSets(exercise_info, 'weight', index)}
                     </CardSection>
-                    <CardSection>
-                        <Text># Reps (Goal: {exercise_info.target_reps || '?'})</Text>
+                    <CardSection style={styles.inputHeaderContainer}>
+                        <Text style={styles.inputHeaderText}>
+                            # Reps (Goal: {exercise_info.target_reps || '?'})
+                        </Text>
                     </CardSection>
                     <CardSection>
                         {this.renderSets(exercise_info, 'reps', index)}
@@ -163,29 +177,36 @@ class WorkoutDiary extends Component {
         return exercises_view;
     }
 
+    renderSaveButton() {
+        if (this.props.diaryToEdit) {
+            return null;
+        }
+        return (
+            <Card>
+                <CardSection>
+                    <Button onPress={this.onWorkoutFinish.bind(this)}>
+                        Finish Workout
+                    </Button>
+                </CardSection>
+                <CardSection>
+                    {this.renderError()}
+                </CardSection>
+            </Card>
+        );
+    }
+
     render() {
         return (
-            <View style={{ marginBottom: 75 }}>
-                <Card>
+            <ScrollView style={{ marginBottom: 25 }}>
+                <Card style={{ borderColor: 'green', borderBottomWidth: 1 }}>
                     <CardSection style={{ flexDirection: 'column' }}>
-                        <Text>Name: {this.props.Workout.value}</Text>
-                        <Text>Date: {this.props.Date}</Text>
+                        <Text>Name: {this.diary_container.workout.name}</Text>
+                        <Text>Date: {this.diary_container.date}</Text>
                     </CardSection>
                 </Card>
-                <ScrollView>
-                    {this.renderExercises()}
-                    <Card>
-                        <CardSection>
-                            <Button onPress={this.onWorkoutFinish.bind(this)}>
-                                Finish Workout
-                            </Button>
-                        </CardSection>
-                        <CardSection>
-                            {this.renderError()}
-                        </CardSection>
-                    </Card>
-                </ScrollView>
-            </View>
+                {this.renderExercises()}
+                {this.renderSaveButton()}
+            </ScrollView>
         );
     }
 }
@@ -200,6 +221,12 @@ const styles = {
         fontSize: 14,
         alignSelf: 'center',
         color: 'red'
+    },
+    inputHeaderContainer: {
+        backgroundColor: 'grey'
+    },
+    inputHeaderText: {
+        color: 'white'
     }
 };
 

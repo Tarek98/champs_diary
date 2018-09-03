@@ -7,57 +7,65 @@ import {
     VIEW_WORKOUT_DETAILS,
     TOGGLE_COLLAPSIBLE,
     DIARY_SUBMIT_SUCCESS,
+    DIARY_HISTORY_FETCHED,
     SHUT_COLLAPSIBLES,
     WORKOUTS_UPDATED,
     REQUEST_FAILURE
 } from './types';
 
-export const routinesFetch = () => {
-    const allRoutines = { public: [], user_defined: [] };
+const DB = firebase.firestore();
+const workoutsRef = DB.collection('workouts');
+const usersRef = DB.collection('users');
 
-    // auto dispatch action to fetch new data every time '/workouts' documents is updated
+const queryRoutines = (query, outputArray, dispatch, readyToDispatch) => {
+    // auto action to fetch new data every time '/workouts' documents is updated
     // .onSnapshot() gets real time updates
+    query.orderBy('level')
+    .onSnapshot({ includeMetadataChanges: true },
+        (querySnapshot) => {
+            console.log(querySnapshot);
+            querySnapshot.forEach((routine) => {
+                outputArray.push({ ...routine.data(), id: routine.id });
+            });
+            console.log(outputArray);
+            if (readyToDispatch) {
+                dispatch({
+                    type: ROUTINE_FETCH_SUCCESS,
+                    payload: outputArray
+                });
+            }
+        }, 
+        (error) => {
+            console.log(error);
+        }
+    );
+};
+
+export const routinesFetch = (user_id) => {
+    const allRoutines = [];
+
+    const query1 = workoutsRef.where('public', '==', true);
+    const query2 = workoutsRef.where('created_by', '==', String(user_id));
+
     return (dispatch) => {
         dispatch({
             type: REQUEST_INIT
         });
 
-        firebase.firestore().collection('/workouts/')
-        .orderBy('level')
-        .onSnapshot({ includeMetadataChanges: true },
-            (querySnapshot) => {
-                querySnapshot.forEach((routine) => {
-                    if (routine.data().public) {
-                        allRoutines.public.push({ ...routine.data(), id: routine.id });
-                    } else {
-                        allRoutines.user_defined.push({ ...routine.data(), id: routine.id });
-                    }
-                });
-                console.log(allRoutines);
-                dispatch({
-                    type: ROUTINE_FETCH_SUCCESS,
-                    payload: allRoutines
-                });
-            }, 
-            (error) => {
-                console.log(error);
-            }
-        );
+        queryRoutines(query1, allRoutines, dispatch, false);
+        queryRoutines(query2, allRoutines, dispatch, true);
     };
 };
 
 export const workoutsFetch = (routine_id) => {
-    const currentWorkouts = [];
-    // currentWorkouts.push({ routine_id });
-
     return (dispatch) => {
         dispatch({
             type: REQUEST_INIT
         });
 
         firebase.firestore().collection(`/workouts/${routine_id}/workout_days/`)
-        .onSnapshot({ includeMetadataChanges: true }, 
-            (querySnapshot) => {
+        .onSnapshot((querySnapshot) => {
+            const currentWorkouts = [];
                 querySnapshot.forEach((workout) => {
                     currentWorkouts.push({ ...workout._data, id: workout.id });
                 });
@@ -74,22 +82,25 @@ export const workoutsFetch = (routine_id) => {
     };
 };
 
-export const expandPanel = (panelId) => {
-    return {
-        type: TOGGLE_COLLAPSIBLE,
-        payload: panelId
-    };
-};
+export const getWorkoutDiaryHistory = (user_id, dateSelected) => {
+    return (dispatch) => {
+        dispatch({ type: REQUEST_INIT });
 
-export const closePanels = () => {
-    return {
-        type: SHUT_COLLAPSIBLES
-    };
-};
+        const history = [];
 
-export const updateComplete = () => {
-    return {
-        type: WORKOUTS_UPDATED
+        usersRef.doc(`${user_id}`).collection('workout_diary')
+        .where('date', '==', dateSelected)
+        .get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((diary) => {
+                history.push({ ...diary.data(), id: diary.id });
+            });
+            console.log(history);
+            dispatch({
+                type: DIARY_HISTORY_FETCHED,
+                payload: history
+            });
+        });
     };
 };
 
@@ -98,12 +109,13 @@ export const submitWorkoutDiary = (current_diary, user_id) => {
         dispatch({ type: REQUEST_INIT });
 
         const newDiaryEntryRef = 
-            firebase.firestore().collection('users').doc(`${user_id}`).collection('workout_diary')
+            usersRef.doc(`${user_id}`).collection('workout_diary')
             .doc();
             
         newDiaryEntryRef.set(current_diary)
             .then(() => {
-                Actions.workoutMain({ successMsg: 'Your workout was saved successfuly!' });
+                Actions.pop({ successMsg:
+                     `Your workout on ${current_diary.date} has been saved!` });
                 dispatch({ type: DIARY_SUBMIT_SUCCESS });
             })
             .catch((error) => {
@@ -113,11 +125,52 @@ export const submitWorkoutDiary = (current_diary, user_id) => {
     };
 };
 
+export const workoutDiaryDelete = (user_id, dairy_id) => {
+    return (dispatch) => {
+        dispatch({ type: REQUEST_INIT });
+
+        usersRef.doc(user_id).collection('workout_diary').doc(dairy_id)
+        .delete()
+        .then(() => {
+            Actions.pop({
+                successMsg: 'Your workout diary entry has been deleted!'
+            });
+            dispatch({ type: DIARY_SUBMIT_SUCCESS });
+        })
+        .catch((error) => {
+            console.log(error);
+            Actions.pop({
+                errorMsg: 'Error: could not delete your workout entry...'
+            });
+        });
+    };
+};
+
+export const routineDelete = (routine_id) => {
+    return (dispatch) => {
+        dispatch({ type: REQUEST_INIT });
+
+        workoutsRef.doc(routine_id).delete()
+        .then(() => {
+            Actions.pop({
+                successMsg: 'Your workout routine has been deleted!'
+            });
+            dispatch({ type: DIARY_SUBMIT_SUCCESS });
+        })
+        .catch((error) => {
+            console.log(error);
+            Actions.pop({
+                errorMsg: 'Error: could not delete your workout...'
+            });
+        });
+    };
+};
+
 export const routineCreate = (routine_name, user_id) => {
     return (dispatch) => {
         dispatch({ type: REQUEST_INIT });
 
-        const workoutsRef = firebase.firestore().collection('workouts');
+        // const workoutsRef = firebase.firestore().collection('workouts');
         const query1 = workoutsRef.where('public', '==', true);
         const query2 = workoutsRef.where('created_by', '==', user_id);
 
@@ -157,9 +210,12 @@ export const routineCreate = (routine_name, user_id) => {
                 workoutsRef.add({
                     routine_name,
                     created_by: user_id,
-                    public: false
+                    public: false,
+                    level: null
                 })
                 .then((docRef) => {
+                    Actions.pop({ successMsg:
+                         `Your workout routine (${routine_name}) was updated and stored!` });
                     dispatch({ type: ROUTINE_CREATED, payload: docRef.id });
                 })
                 .catch((error) => {
@@ -173,11 +229,16 @@ export const routineCreate = (routine_name, user_id) => {
     };
 };
 
-export const workoutCreate = (routine_id, workout_name, exercises) => {
+export const workoutUpdate = (routine_id, workout_name, exercises, workout_id, finished) => {
     return (dispatch) => {
-        const routineRef = firebase.firestore()
-                            .collection('workouts').doc(`${routine_id}`).collection('workout_days')
-                            .doc();
+        const workoutDaysRef = workoutsRef.doc(`${routine_id}`).collection('workout_days');
+
+        // next if condition doesn't pass when submitting new workout doc [.doc()]
+        let routineRef = workoutDaysRef.doc();
+
+        if (workout_id !== undefined) { // i.e. updating pre-existing workout
+            routineRef = workoutDaysRef.doc(workout_id);
+        } 
 
         routineRef.set({
             workout_name,
@@ -185,6 +246,13 @@ export const workoutCreate = (routine_id, workout_name, exercises) => {
         })
         .then(() => { 
             console.log(`${workout_name} has been submitted for routine_id: ${routine_id}`); 
+            if (finished !== undefined && finished === true) {
+                dispatch({
+                    type: WORKOUTS_UPDATED
+                });
+                Actions.pop({ successMsg:
+                    'Your workout routine was updated and stored!' });
+            }
         })
         .catch(error => {
             console.log(error);
@@ -193,3 +261,21 @@ export const workoutCreate = (routine_id, workout_name, exercises) => {
     };
 };
 
+export const expandPanel = (panelId) => {
+    return {
+        type: TOGGLE_COLLAPSIBLE,
+        payload: panelId
+    };
+};
+
+export const closePanels = () => {
+    return {
+        type: SHUT_COLLAPSIBLES
+    };
+};
+
+export const updateComplete = () => {
+    return {
+        type: WORKOUTS_UPDATED
+    };
+};

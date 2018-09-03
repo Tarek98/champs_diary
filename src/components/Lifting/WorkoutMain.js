@@ -11,12 +11,20 @@ class WorkoutMain extends Component {
         this.state = { date: Moment().toDate() };
     }
 
-    renderSuccessMsg() {
+    renderSuccessOrError() {
         if (this.props.successMsg) {
             return (
                 <CardSection style={{ justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ color: 'green' }}>
+                    <Text style={{ color: 'green', textAlign: 'center' }}>
                         {this.props.successMsg}
+                    </Text>
+                </CardSection>
+            );
+        } else if (this.props.errorMsg) {
+            return (
+                <CardSection style={{ justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={{ color: 'red', textAlign: 'center' }}>
+                        {this.props.errorMsg}
                     </Text>
                 </CardSection>
             );
@@ -30,7 +38,8 @@ class WorkoutMain extends Component {
                     <CardSection>
                         <Button 
                             onPress={() => Actions.workoutEdit({ 
-                            sectionTitle: 'New Workout Routine' 
+                                sectionTitle: 'New Workout Routine',
+                                routineToEdit: false 
                             })}
                         >
                             Create a Workout
@@ -44,8 +53,8 @@ class WorkoutMain extends Component {
                 </Card>
                 <Card>
                     <CardSection style={{ justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={{ fontWeight: 'bold' }}>
-                            To track your workout, tap on a date below
+                        <Text style={{ fontWeight: 'bold', textAlign: 'center' }}>
+                            To track your workout or view a previous workout, tap on a date below
                         </Text>
                     </CardSection>
                     <CardSection>
@@ -63,7 +72,7 @@ class WorkoutMain extends Component {
                             barView={{ backgroundColor: '#00A86B' }}
                         />
                     </CardSection>
-                    {this.renderSuccessMsg()}
+                    {this.renderSuccessOrError()}
                 </Card>
             </View>
         );

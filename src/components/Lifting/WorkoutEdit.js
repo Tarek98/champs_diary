@@ -3,14 +3,26 @@ import { View, Text, ScrollView, Switch } from 'react-native';
 import { connect } from 'react-redux';
 import { Dropdown } from 'react-native-material-dropdown';
 import { CardSection, Input, Card, Button, ListItem, Spinner } from '../common';
-import { closePanels, routineCreate, workoutCreate, updateComplete } from '../../actions';
+import { closePanels, routineCreate, workoutUpdate, updateComplete,
+     workoutsFetch } from '../../actions';
 
 class WorkoutEdit extends Component {
-    constructor() {
-        super();
+    componentWillMount() {
+        this.props.closePanels();
+
+        let routineName = '';
+        let routineId = '';
         const numExercises = [];
         const workout_details = [];
         this.dropdown_data = [];
+
+        if (this.props.routineToEdit) { // editing a pre-existing routine
+            const routine = this.props.routineToEdit;
+            routineName = routine.routine_name;
+            routineId = routine.id;
+
+            this.props.workoutsFetch(routine.id);
+        }
 
         for (let i = 1; i < 8; i++) {
             this.dropdown_data.push({ value: i });
@@ -22,39 +34,60 @@ class WorkoutEdit extends Component {
                 });
             }
         }
-
-        console.log(workout_details);
         
-        this.state = { 
-            routine_name: '', 
+        this.setState({
+            routine_name: routineName, 
+            routineId,
             numWorkouts: 1,
             exercises_per_workout: numExercises, 
             workout_details,
-            error: ''
-        }; 
-    }
-
-    componentWillMount() {
-        this.props.closePanels();
+            error: '' 
+        });  
     }
 
     componentWillReceiveProps(nextProps) {
+        // first if check: saves workouts after ensuring that routine has been saved to DB first
         if (nextProps.initiateWorkoutSave && nextProps.routineId !== this.props.routineId) {
             for (let i = 0; i < this.state.numWorkouts; i++) {
                 const element = this.state.workout_details[i];
                 const numExercises = this.state.exercises_per_workout[i];
                 const exercises = element.exercises.slice(0, numExercises);
 
-                this.props.workoutCreate(nextProps.routineId, element.name, exercises);
+                this.props.workoutUpdate(nextProps.routineId, element.name, exercises);
             }
             this.props.updateComplete();
+        } else if (nextProps.currentWorkouts) { // editing pre-existing workouts
+            const workouts = nextProps.currentWorkouts;
+            let numExercisesArr = [];
+            let detailsArr = [];
+
+            for (let j = 0; j < workouts.length; j++) {
+                numExercisesArr = this.state.exercises_per_workout;
+                detailsArr = this.state.workout_details;
+
+                numExercisesArr[j] = workouts[j].exercises.length;
+                detailsArr[j].name = workouts[j].workout_name;
+                detailsArr[j].firestoreID = workouts[j].id;
+
+                for (let k = 0; k < numExercisesArr[j]; k++) {
+                    detailsArr[j].exercises[k] = workouts[j].exercises[k];
+                }
+            }
+
+            console.log(`workout length : ${workouts.length}`);
+
+            this.setState({
+                numWorkouts: workouts.length,
+                exercises_per_workout: numExercisesArr,
+                workout_details: detailsArr
+            });
         }
     }
 
     onSaveButton() {
         // Error checking to determine if workout can be submitted
         if (this.state.routine_name !== '') {
-            // Hasmaps used to check for duplicate workout names
+            // Hashmaps used to check for duplicate workout names
             const hashMap1 = {};
 
             for (let i = 0; i < this.state.numWorkouts; i++) {
@@ -75,7 +108,13 @@ class WorkoutEdit extends Component {
                                  'Error: exercises must have unique names and non-empty sets' 
                             });
                             return;
-                        }
+                        } else if (currExercise.sets > 7 || currExercise.sets < 1) {
+                            this.setState({ 
+                                error:
+                                 'Error: exercises must have more than 1 set and less than 7 sets' 
+                            });
+                            return;
+                        } 
 
                         hashMap2[currExercise.name] = 'occupied';
                     }
@@ -92,9 +131,23 @@ class WorkoutEdit extends Component {
         // Clear error if all checks are passed
         this.setState({ error: '' });
 
-        // Saves routine in DB, returns routineId + initiateWorkoutUpdate props
-        // In ComponentWillRecieveProps, response is triggerred to save workouts in the routine
-        this.props.routineCreate(this.state.routine_name, this.props.user.uid);
+        if (this.props.routineToEdit && this.props.currentWorkouts) { 
+            const workoutCount = this.props.currentWorkouts.length;
+            // update pre-existing workouts for a routine in DB
+            for (let x = 0; x < workoutCount; x++) {
+                const isLastWorkout = (x === workoutCount - 1);
+                const workoutInput = this.state.workout_details[x];
+                const numExercises = this.state.exercises_per_workout[x];
+                const exercises = workoutInput.exercises.slice(0, numExercises);
+                
+                this.props.workoutUpdate(this.state.routineId, workoutInput.name, exercises, 
+                    workoutInput.firestoreID, isLastWorkout);
+            }
+        } else {
+            // Save routine in DB, returns routineId + initiateWorkoutUpdate props
+            // In ComponentWillRecieveProps, response is triggerred to save workouts in the routine
+            this.props.routineCreate(this.state.routine_name, this.props.user.uid);
+        }
     }
 
     updateExercise(workout_day, i, detail_type, value) {
@@ -102,7 +155,7 @@ class WorkoutEdit extends Component {
             const new_details = prevState.workout_details;
             new_details[workout_day].exercises[i][detail_type] 
                 = (detail_type === 'sets' || detail_type === 'target_reps')
-                 ? parseInt(value, 10) : value;
+                 ? (parseInt(value, 10) || 0) : value;
             return { workout_details: new_details };
         });
     }
@@ -116,7 +169,9 @@ class WorkoutEdit extends Component {
             const curr_field = input_names[fieldN];
             input_fields.push(
                 <Input
-                    value={this.state.workout_details[workout_day].exercises[index][curr_field]}
+                    value={
+                        String(this.state.workout_details[workout_day].exercises[index][curr_field])
+                    }
                     placeholder={placeholders[fieldN]}
                     inputType={curr_field === 'name' ? 'default' : 'numeric'}
                     hideLabel
@@ -247,6 +302,7 @@ class WorkoutEdit extends Component {
                     <CardSection>
                         <Input 
                             value={this.state.routine_name}
+                            editable={!this.props.routineToEdit}
                             label="Name" 
                             placeholder="My Workout Routine"
                             labelStyle={styles.inputLabel}
@@ -257,8 +313,9 @@ class WorkoutEdit extends Component {
                     <CardSection>
                         <Dropdown
                             label="Number of Workouts"
+                            disabled={Boolean(this.props.routineToEdit)}
                             data={this.dropdown_data}
-                            value={1}
+                            value={this.state.numWorkouts}
                             containerStyle={{ flex: 1, paddingLeft: 5, paddingRight: 10 }}
                             onChangeText={(value) => { this.setState({ numWorkouts: value }); }}
                         />
@@ -316,11 +373,11 @@ const styles = {
 };
 
 const mapStateToProps = state => {
-    const { loading, routineId, initiateWorkoutSave, errorMsg } = state.workouts;
+    const { loading, routineId, initiateWorkoutSave, errorMsg, currentWorkouts } = state.workouts;
     const { user } = state.auth;
 
-    return { loading, routineId, initiateWorkoutSave, user, errorMsg };
+    return { loading, routineId, initiateWorkoutSave, user, errorMsg, currentWorkouts };
 };
 
 export default connect(mapStateToProps, 
-    { closePanels, routineCreate, workoutCreate, updateComplete })(WorkoutEdit);
+    { closePanels, routineCreate, workoutUpdate, updateComplete, workoutsFetch })(WorkoutEdit);

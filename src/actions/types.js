@@ -17,6 +17,7 @@ export const WORKOUTS_UPDATED = 'workouts_updated';
 export const ROUTINE_FETCH_SUCCESS = 'routine_fetch_success';
 export const VIEW_WORKOUT_DETAILS = 'view_workout_details';
 export const DIARY_SUBMIT_SUCCESS = 'diary_submit_success';
+export const DIARY_HISTORY_FETCHED = 'diary_history_fetched';
 
 export const TOGGLE_COLLAPSIBLE = 'toggle_collapsible';
 export const SHUT_COLLAPSIBLES = 'shut_collapsibles';
