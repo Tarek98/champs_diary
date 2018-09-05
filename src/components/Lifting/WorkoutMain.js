@@ -66,7 +66,7 @@ class WorkoutMain extends Component {
                                 });
                             }}
                             selected={this.state.date}
-                            minDate={Moment().subtract(50, 'years').startOf('day')}
+                            minDate={Moment().subtract(2, 'years').startOf('day')}
                             maxDate={Moment().add(1, 'month').startOf('day')}
                             style={styles.calendarStyle}
                             barView={{ backgroundColor: '#00A86B' }}

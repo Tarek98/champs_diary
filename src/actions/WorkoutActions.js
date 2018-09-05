@@ -42,12 +42,11 @@ const queryRoutines = (query, outputArray, dispatch, readyToDispatch) => {
 };
 
 export const routinesFetch = (user_id) => {
-    const allRoutines = [];
-
     const query1 = workoutsRef.where('public', '==', true);
     const query2 = workoutsRef.where('created_by', '==', String(user_id));
 
     return (dispatch) => {
+        const allRoutines = [];
         dispatch({
             type: REQUEST_INIT
         });
@@ -114,8 +113,9 @@ export const submitWorkoutDiary = (current_diary, user_id) => {
             
         newDiaryEntryRef.set(current_diary)
             .then(() => {
-                Actions.pop({ successMsg:
-                     `Your workout on ${current_diary.date} has been saved!` });
+                Actions.popTo('workoutMain');
+                Actions.refresh({ successMsg:
+                    `Your workout on ${current_diary.date} has been saved!` });
                 dispatch({ type: DIARY_SUBMIT_SUCCESS });
             })
             .catch((error) => {
@@ -132,16 +132,15 @@ export const workoutDiaryDelete = (user_id, dairy_id) => {
         usersRef.doc(user_id).collection('workout_diary').doc(dairy_id)
         .delete()
         .then(() => {
-            Actions.pop({
-                successMsg: 'Your workout diary entry has been deleted!'
-            });
+            Actions.popTo('workoutMain');
+            Actions.refresh({ successMsg:
+                'Your workout diary entry has been deleted!' });
             dispatch({ type: DIARY_SUBMIT_SUCCESS });
         })
         .catch((error) => {
             console.log(error);
-            Actions.pop({
-                errorMsg: 'Error: could not delete your workout entry...'
-            });
+            Actions.popTo('workoutMain');
+            Actions.refresh({ errorMsg: 'Error: could not delete your workout entry...' });
         });
     };
 };
@@ -152,16 +151,14 @@ export const routineDelete = (routine_id) => {
 
         workoutsRef.doc(routine_id).delete()
         .then(() => {
-            Actions.pop({
-                successMsg: 'Your workout routine has been deleted!'
-            });
+            Actions.popTo('workoutMain');
+            Actions.refresh({ successMsg: 'Your workout routine has been deleted!' });
             dispatch({ type: DIARY_SUBMIT_SUCCESS });
         })
         .catch((error) => {
             console.log(error);
-            Actions.pop({
-                errorMsg: 'Error: could not delete your workout...'
-            });
+            Actions.popTo('workoutMain');
+            Actions.refresh({ errorMsg: 'Error: could not delete your workout...' });
         });
     };
 };
@@ -214,7 +211,8 @@ export const routineCreate = (routine_name, user_id) => {
                     level: null
                 })
                 .then((docRef) => {
-                    Actions.pop({ successMsg:
+                    Actions.popTo('workoutMain');
+                    Actions.refresh({ successMsg:
                          `Your workout routine (${routine_name}) was updated and stored!` });
                     dispatch({ type: ROUTINE_CREATED, payload: docRef.id });
                 })
@@ -250,7 +248,8 @@ export const workoutUpdate = (routine_id, workout_name, exercises, workout_id, f
                 dispatch({
                     type: WORKOUTS_UPDATED
                 });
-                Actions.pop({ successMsg:
+                Actions.popTo('workoutMain');
+                Actions.refresh({ successMsg:
                     'Your workout routine was updated and stored!' });
             }
         })

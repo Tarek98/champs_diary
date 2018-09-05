@@ -175,7 +175,7 @@ class WorkoutEdit extends Component {
                     placeholder={placeholders[fieldN]}
                     inputType={curr_field === 'name' ? 'default' : 'numeric'}
                     hideLabel
-                    inputTextStyle={{ fontSize: 14 }}
+                    inputTextStyle={{ fontSize: 14, height: 30 }}
                     onChangeText={value =>
                         this.updateExercise(workout_day, index, curr_field, value)}
                 />
@@ -363,6 +363,7 @@ const styles = {
     },
     exerciseTable: {
         justifyContent: 'space-between',
+        alignItems: 'center',
         padding: 10
     },
     errorMsgStyle: {

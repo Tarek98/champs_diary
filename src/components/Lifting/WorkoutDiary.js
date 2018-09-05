@@ -72,7 +72,7 @@ class WorkoutDiary extends Component {
         if (value.length === 0) { 
             curr_entry[entry_type] = 0;
         } else {
-            curr_entry[entry_type] = parseInt(value, 10);
+            curr_entry[entry_type] = parseFloat(parseFloat(value).toFixed(2));
         }
     }
 
