@@ -1,4 +1,5 @@
 import { Actions } from 'react-native-router-flux';
+import { AccessToken, LoginManager } from 'react-native-fbsdk';
 import firebase from 'react-native-firebase';
 import { 
     EMAIL_CHANGED,
@@ -46,6 +47,36 @@ export const loginUser = ({ email, password }) => {
                     });
             });
     };
+};
+
+// Calling the following function will open the FB login dialogue
+export const facebookLogin = (accessToken) => {
+    try {
+        const result = await LoginManager.logInWithReadPermissions(['public_profile', 'email']);
+
+        if (result.isCancelled) {
+            throw new Error('User cancelled request');
+        }
+
+        console.log(`Login success with permissions: ${result.grantedPermissions.toString()}`);
+
+        // get the access token
+        const data = await AccessToken.getCurrentAccessToken();
+
+        if (!data) {
+            throw new Error('Something went wrong obtaining the users access token');
+        }
+
+        // create a new firebase credential with the token
+        const credential = firebase.auth.FacebookAuthProvider.credential(data.accessToken);
+
+        // login with credential
+        const currentUser = await firebase.auth().signInAndRetrieveDataWithCredential(credential);
+
+        console.info(JSON.stringify(currentUser.user.toJSON()));
+    } catch (e) {
+    console.error(e);
+    }
 };
 
 export const logoutUser = () => {

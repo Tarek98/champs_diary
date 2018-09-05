@@ -8,7 +8,6 @@ import WorkoutList from './components/Lifting/WorkoutList';
 import WorkoutSelect from './components/Lifting/WorkoutSelect';
 import WorkoutDiary from './components/Lifting/WorkoutDiary';
 import RunningTracker from './components/Running/RunningTracker';
-import SwimmingTracker from './components/Swimming/SwimmingTracker';
 import WeightTracker from './components/WeightCharts/WeightTracker';
 import SettingsPage from './components/SettingsPage';
 import WorkoutEdit from './components/Lifting/WorkoutEdit';
@@ -72,25 +71,18 @@ const RouterComponent = () => {
                                 title="Track Your Workout"
                             />
                         </Scene>
-                        <Scene key="running" title="Run" icon={TabIcon}>
-                            <Scene
-                                key="runningTracker"
-                                component={RunningTracker}
-                                title="Running Tracker"
-                            />
-                        </Scene>
-                        <Scene key="swim" title="Swim" icon={TabIcon}>
-                            <Scene
-                                key="swimmingTracker"
-                                component={SwimmingTracker}
-                                title="Swimming Tracker"
-                            />
-                        </Scene>
                         <Scene key="weight" title="Weight" icon={TabIcon}>
                             <Scene
                                 key="weightTracker"
                                 component={WeightTracker}
                                 title="Weight Tracker"
+                            />
+                        </Scene>
+                        <Scene key="running" title="Run" icon={TabIcon}>
+                            <Scene
+                                key="runningTracker"
+                                component={RunningTracker}
+                                title="Running Tracker"
                             />
                         </Scene>
                     </Scene>

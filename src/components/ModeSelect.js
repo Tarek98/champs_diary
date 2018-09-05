@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import { LoginButton, AccessToken } from 'react-native-fbsdk';
 import { connect } from 'react-redux';
 import { Button } from './common';
+import { facebookLogin } from '../actions';
 
 class ModeSelect extends Component {
     componentWillMount() {
@@ -24,12 +26,29 @@ class ModeSelect extends Component {
                 <Button styling={[menuButton, firstButton]} onPress={() => Actions.defaultLogin()}> 
                     Login with a Champ Account
                 </Button>
-                <Button styling={menuButton}>
+                <LoginButton
+                    onLoginFinished={(error, result) => {
+                        if (error) {
+                            console.log('Login has error' + result.error);
+                        } else if (result.isCancelled) {
+                            console.log('Login is cancelled.');
+                        } else {
+                            AccessToken.getCurrentAccessToken()
+                            .then((data) => {
+                                const accessToken = data.accessToken.toString();
+                                console.log(accessToken);
+                                this.props.facebookLogin(accessToken);
+                            });
+                        }
+                    }}
+                    onLogoutFinished={() => console.log('Logout.')}
+                />
+                {/* <Button styling={menuButton} onPress={() => this.props.facebookLogin()}>
                     Facebook Login
-                </Button>
-                <Button styling={menuButton}>
+                </Button> */}
+                {/* <Button styling={menuButton}>
                     Welcome Tutorial
-                </Button>
+                </Button> */}
             </View>
         );
     }
@@ -59,4 +78,4 @@ const mapStateToProps = ({ auth }) => {
     return { user: auth.user };
 };
 
-export default connect(mapStateToProps)(ModeSelect);
+export default connect(mapStateToProps, { facebookLogin })(ModeSelect);
