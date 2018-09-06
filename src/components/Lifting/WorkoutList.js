@@ -24,8 +24,9 @@ class WorkoutList extends Component {
     componentWillReceiveProps(nextProps) {
         // nextProps: next set of props that component is about to recieve
         // this.props is the old set of props
-        
-        this.createDataSource(nextProps);
+        if (nextProps.routines !== this.props.routines) {
+            this.createDataSource(nextProps);
+        }
     }
 
     onDecline() {
@@ -134,8 +135,8 @@ class WorkoutList extends Component {
         return (
             <View>
                 <Card>
-                    <CardSection>
-                        <Text>
+                    <CardSection style={{ justifyContent: 'center', alignItems: 'center' }}>
+                        <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>
                             Tap on the routines below to view their details
                         </Text>
                     </CardSection>
@@ -160,4 +161,5 @@ const mapStateToProps = state => {
              expandedPanelId: state.workouts.selectedPanelId };
 };
 
-export default connect(mapStateToProps, { routinesFetch, routineDelete })(WorkoutList);
+export default connect(mapStateToProps, { routinesFetch, 
+    routineDelete })(WorkoutList);

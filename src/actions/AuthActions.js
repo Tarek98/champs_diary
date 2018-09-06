@@ -1,5 +1,4 @@
 import { Actions } from 'react-native-router-flux';
-import { AccessToken, LoginManager } from 'react-native-fbsdk';
 import firebase from 'react-native-firebase';
 import { 
     EMAIL_CHANGED,
@@ -49,36 +48,6 @@ export const loginUser = ({ email, password }) => {
     };
 };
 
-// Calling the following function will open the FB login dialogue
-export const facebookLogin = (accessToken) => {
-    try {
-        const result = await LoginManager.logInWithReadPermissions(['public_profile', 'email']);
-
-        if (result.isCancelled) {
-            throw new Error('User cancelled request');
-        }
-
-        console.log(`Login success with permissions: ${result.grantedPermissions.toString()}`);
-
-        // get the access token
-        const data = await AccessToken.getCurrentAccessToken();
-
-        if (!data) {
-            throw new Error('Something went wrong obtaining the users access token');
-        }
-
-        // create a new firebase credential with the token
-        const credential = firebase.auth.FacebookAuthProvider.credential(data.accessToken);
-
-        // login with credential
-        const currentUser = await firebase.auth().signInAndRetrieveDataWithCredential(credential);
-
-        console.info(JSON.stringify(currentUser.user.toJSON()));
-    } catch (e) {
-    console.error(e);
-    }
-};
-
 export const logoutUser = () => {
     return (dispatch) => {
       dispatch({ type: LOGOUT_USER });
@@ -91,6 +60,46 @@ export const logoutUser = () => {
         .catch((error) => {
             console.log(error);
             dispatch({ type: LOGOUT_FAIL });
+        });
+    };
+};
+
+export const loginFBUser = (userData) => {
+    return (dispatch) => {
+        dispatch({ type: LOGIN_USER });
+        const { uid, displayName, metadata } = userData;
+        const { email } = userData.providerData[0];
+
+        const userInfo = { _user: { uid,
+            provider: 'Facebook', 
+            displayName, 
+            email, 
+            date_created: metadata.creationTime } };
+        const userPath = firebase.firestore().collection('users').doc(uid);
+
+        userPath.get()
+        .then((doc) => {
+            // Find out if facebook user has used the app before
+            if (doc.exists) {
+                // Login user and skip adding data to DB
+                loginUserSuccess(dispatch, userInfo);
+                return;
+            }
+            // First-time facebook user, add his data to DB
+            userPath.set({ displayName, 
+                email, 
+                date_created: userInfo._user.date_created, 
+                provider: userInfo._user.provider 
+            })
+            .then(() => loginUserSuccess(dispatch, userInfo))
+            .catch((error) => {
+                console.log(error);
+                loginUserFail(dispatch, 'Facebook login has failed');
+            });
+        })
+        .catch((error) => {
+            console.log(error);
+            loginUserFail(dispatch, 'Facebook login has failed');
         });
     };
 };

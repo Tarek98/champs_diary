@@ -44,7 +44,7 @@ const RouterComponent = () => {
                         showLabel={false}
                         type={ActionConst.RESET}
                     >
-                        <Scene key="lift" title="Lift" icon={TabIcon}>
+                        <Scene key="lift" title="Lifting" icon={TabIcon}>
                             <Scene
                                 key="workoutMain"
                                 component={WorkoutMain}
@@ -71,14 +71,14 @@ const RouterComponent = () => {
                                 title="Track Your Workout"
                             />
                         </Scene>
-                        <Scene key="weight" title="Weight" icon={TabIcon}>
+                        <Scene key="weight" title="Body Weight" icon={TabIcon}>
                             <Scene
                                 key="weightTracker"
                                 component={WeightTracker}
                                 title="Weight Tracker"
                             />
                         </Scene>
-                        <Scene key="running" title="Run" icon={TabIcon}>
+                        <Scene key="running" title="Running" icon={TabIcon}>
                             <Scene
                                 key="runningTracker"
                                 component={RunningTracker}

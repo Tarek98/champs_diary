@@ -40,6 +40,7 @@ const pushStatsToChart = (array, date, value) => {
 
 export const populateStatsChart = (user_id, monthStartDate) => {
     return (dispatch) => {
+        console.log(user_id);
         dispatch({ type: CHART_LOADING });
         const monthEndDate = Moment(monthStartDate).add(1, 'month').format('YYYYMMDD');
         
@@ -51,23 +52,25 @@ export const populateStatsChart = (user_id, monthStartDate) => {
             const weightArray = { labels: ['O'], datasets: [{ data: [0] }] };
             const waistArray = { labels: ['O'], datasets: [{ data: [0] }] };
 
-            let firstIteration = true;
-            querySnapshot.forEach((doc) => {
-                const waistStat = doc.data().waist; 
-                const weightStat = doc.data().weight;  
-                const statsDate = doc.data().date;
-                // Weight stats are always valid in DB
-                pushStatsToChart(weightArray, statsDate, weightStat);
-                // Waist stats are optional, so may not exist
-                if (waistStat !== '' && waistStat !== null) {
-                    pushStatsToChart(waistArray, statsDate, waistStat);
-                }
-                if (firstIteration) {
-                    weightArray.datasets[0].data[0] = weightStat - 0.01;
-                    waistArray.datasets[0].data[0] = waistStat - 0.01;
-                    firstIteration = false;
-                }
-            });
+            if (!querySnapshot.empty) {
+                let firstIteration = true;
+                querySnapshot.forEach((doc) => {
+                    const waistStat = doc.data().waist; 
+                    const weightStat = doc.data().weight;  
+                    const statsDate = doc.data().date;
+                    // Weight stats are always valid in DB
+                    pushStatsToChart(weightArray, statsDate, weightStat);
+                    // Waist stats are optional, so may not exist
+                    if (waistStat !== '' && waistStat !== null) {
+                        pushStatsToChart(waistArray, statsDate, waistStat);
+                    }
+                    if (firstIteration) {
+                        weightArray.datasets[0].data[0] = weightStat - 0.01;
+                        waistArray.datasets[0].data[0] = waistStat - 0.01;
+                        firstIteration = false;
+                    }
+                });
+            }
             
             dispatch({ type: CHART_UPDATED, payload: { weightArray, waistArray } });
         }); 

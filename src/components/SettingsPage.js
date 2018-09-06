@@ -36,10 +36,14 @@ class SettingsPage extends Component {
     render() {
         // If a user is logged in, display custom user settings
         if (this.props.user) {
+            // User is signed in with facebook if he has displayName
+            const userName = (this.props.user.displayName) ? 
+                (`${this.props.user.displayName} (Facebook)`) : (this.props.user.email);
+
             return (
                 <Card>
                     <CardSection>
-                        <Text>You are logged in as {this.props.user.email}</Text>
+                        <Text>You are logged in as {userName}</Text>
                     </CardSection>
                     {this.renderError()}
                     <CardSection>

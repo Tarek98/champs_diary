@@ -93,7 +93,7 @@ class WeightTracker extends Component {
         return (
             <LineChart
                 data={selectedChart()}
-                width={width - 10}
+                width={width - 12}
                 height={(height / 2) - 75}
                 chartConfig={this.chartConfig}
             />
@@ -107,8 +107,8 @@ class WeightTracker extends Component {
         return (
         <ScrollView> 
             <Card>
-                <CardSection style={{ justifyContent: 'center' }}>
-                    <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>
+                <CardSection style={styles.contentHeader}>
+                    <Text style={styles.contentHeaderText}>
                         Update or view your weight by changing the date!
                     </Text>
                 </CardSection>
@@ -182,15 +182,15 @@ class WeightTracker extends Component {
                 {this.renderMessage()}
             </Card>
             <Card style={{ marginBottom: 10 }}>
-                <CardSection style={{ justifyContent: 'center' }}>
-                    <Text style={{ fontWeight: 'bold', textAlign: 'center' }}>
+                <CardSection style={[styles.contentHeader, { backgroundColor: '#E55300' }]}>
+                    <Text style={styles.contentHeaderText}>
                         Monthly Progress Chart
                     </Text>
                 </CardSection>
                 {this.renderStatsChart(height, width)}
                 <CardSection>
                     <Dropdown
-                        label='Chart Y-Axis'
+                        label='Y-Axis Value'
                         data={this.chartCategories}
                         value={this.state.chartYAxis}
                         containerStyle={{ flex: 1, paddingLeft: 5, paddingRight: 10 }}
@@ -226,6 +226,18 @@ class WeightTracker extends Component {
         );
     }
 }
+
+const styles = {
+  contentHeader: {
+    justifyContent: 'center',
+    backgroundColor: 'grey' 
+  }, 
+  contentHeaderText: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    color: 'white'
+  }
+};
 
 const mapStateToProps = state => {
     const { user } = state.auth;
