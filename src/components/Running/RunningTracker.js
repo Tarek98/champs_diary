@@ -4,7 +4,7 @@ import { Card } from '../common';
 
 class RunningTracker extends Component {
     render() {
-        const height = Dimensions.get('window').height;
+        const { width, height } = Dimensions.get('window');
 
         return (
             <Card 

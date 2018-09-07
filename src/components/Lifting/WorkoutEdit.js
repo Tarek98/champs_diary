@@ -312,7 +312,7 @@ class WorkoutEdit extends Component {
                     </CardSection>
                     <CardSection>
                         <Dropdown
-                            label="Number of Workouts"
+                            label="Number of Workouts Per Week"
                             disabled={Boolean(this.props.routineToEdit)}
                             data={this.dropdown_data}
                             value={this.state.numWorkouts}

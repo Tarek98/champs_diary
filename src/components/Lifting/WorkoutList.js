@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ListView, Text, View, Linking } from 'react-native';
+import { Text, View, Linking, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { CardSection, Card, ListItem, Spinner, Button, Confirm } from '../common';
@@ -14,19 +14,6 @@ class WorkoutList extends Component {
 
     componentWillMount() {
         this.props.routinesFetch(this.props.user.uid);
-        
-        // Wait for routines fetch (async action) to finish and then create data source
-        if (!this.props.loading) {
-            this.createDataSource(this.props);
-        }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        // nextProps: next set of props that component is about to recieve
-        // this.props is the old set of props
-        if (nextProps.routines !== this.props.routines) {
-            this.createDataSource(nextProps);
-        }
     }
 
     onDecline() {
@@ -37,15 +24,6 @@ class WorkoutList extends Component {
         this.props.routineDelete(this.props.expandedPanelId);
         this.setState({ showModal: false });
     }
-
-    createDataSource({ routines }) {
-        const ds = new ListView.DataSource({
-            rowHasChanged: (r1, r2) => r1 !== r2
-        });
-
-        this.dataSource = ds.cloneWithRows(routines);
-    }
-
 
     renderButtons(workout) {
         if (workout.level === null) {
@@ -123,10 +101,9 @@ class WorkoutList extends Component {
             );
         }
         return (
-            <ListView
-                enableEmptySections
-                dataSource={this.dataSource}
-                renderRow={this.renderRow.bind(this)}
+            <FlatList
+                data={this.props.routines}
+                renderItem={({ item }) => this.renderRow(item)}
             />
         );
     }
