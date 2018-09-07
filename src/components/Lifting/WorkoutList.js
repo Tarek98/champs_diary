@@ -57,10 +57,14 @@ class WorkoutList extends Component {
     }
 
     renderRow(workout) {
+        const headerTabColor = (workout.level === null) ? 'green' : 'grey';
+        const headerStyle = { backgroundColor: headerTabColor };
+
         return (
             <ListItem 
                 panelId={workout.id} 
                 cardTitle={workout.routine_name}
+                headerStyle={headerStyle}
             >
                 <View>
                     <CardSection style={{ flexDirection: 'column', marginLeft: 5 }}>
@@ -119,6 +123,16 @@ class WorkoutList extends Component {
                     </CardSection>
                 </Card>
                 {this.renderListView()}
+                <Card>
+                    <CardSection>
+                        <Text>
+                            Routines with grey-colored headers are pre-packaged
+                            with Champion's Diary. Try or view these routines using the calendar 
+                            on the 'Lifting' main menu!
+                        </Text>
+                        <Text />
+                    </CardSection>
+                </Card>
                 <Confirm
                     visible={this.state.showModal}
                     onAccept={this.onAccept.bind(this)}

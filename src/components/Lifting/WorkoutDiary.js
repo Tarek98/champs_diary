@@ -136,27 +136,22 @@ class WorkoutDiary extends Component {
         return allSets;
     }
 
-    renderExerciseHeader(exercise_info) {
-        const header = [<Text style={{ color: 'white' }}>{exercise_info.name}</Text>];
-
-        if (exercise_info.bw) { // Bodyweight exercise
-            header.push(<Text> (Use bodyweight)</Text>);
-            // // To-do: Pre-fill weight fields with user's bodyweight
-        }
-        
-        return header;
-    }
-
     renderExercises() {
         const exercises_view = this.exercises_arr.map((exercise_info, index) => {
+            let bw_text = '';
+            if (exercise_info.bw) { // Bodyweight exercise
+                bw_text = '[bodyweight + weight lifted]';
+                // // To-do: Pre-fill weight fields with user's bodyweight
+            }
+
             return (
                 <Card style={{ borderColor: 'steelblue', borderBottomWidth: 1 }}> 
                     <CardSection style={{ backgroundColor: 'steelblue' }}>
-                        {this.renderExerciseHeader(exercise_info)}
+                        <Text style={{ color: 'white' }}>{exercise_info.name}</Text>
                     </CardSection>
                     <CardSection style={styles.inputHeaderContainer}>
                         <Text style={styles.inputHeaderText}>
-                            Weight
+                            {`Weight ${bw_text}`}
                         </Text>
                     </CardSection>
                     <CardSection>
