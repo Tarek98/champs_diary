@@ -39,7 +39,8 @@ class WorkoutMain extends Component {
                         <Button 
                             onPress={() => Actions.workoutEdit({ 
                                 sectionTitle: 'New Workout Routine',
-                                routineToEdit: null
+                                routineToEdit: null,
+                                routineToView: null
                             })}
                         >
                             Create a Workout

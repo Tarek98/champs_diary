@@ -3,17 +3,44 @@ import { Text, View, Linking, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { CardSection, Card, ListItem, Spinner, Button, Confirm } from '../common';
-import { routinesFetch, routineDelete } from '../../actions';
+import { routinesFetch, routineDelete, workoutsFetch } from '../../actions';
 
 const Difficulty = ['Great routine for beginners with fast progression',
                     'Fun workout routine for beginners',
                     'Awesome routine for intermediates'];
 
 class WorkoutList extends Component {
-    state = { showModal: false };
+    constructor() {
+        super();
+        this.state = { showModal: false, routineToEdit: null, routineToView: null, routines: null };
+    }
 
     componentWillMount() {
         this.props.routinesFetch(this.props.user.uid);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.routines) {
+            console.log(nextProps.routines);
+            this.setState({ routines: nextProps.routines });
+        }
+        if (nextProps.currentWorkouts !== this.props.currentWorkouts) {
+            if (this.state.routineToEdit !== null) {
+                Actions.workoutEdit({
+                    routineToEdit: this.state.routineToEdit,
+                    routineToView: null,
+                    currentWorkouts: nextProps.currentWorkouts,
+                    sectionTitle: 'Edit Your Workout Routine' 
+                });
+            } else if (this.state.routineToView !== null) {
+                Actions.workoutEdit({
+                    routineToView: this.state.routineToView,
+                    routineToEdit: null,
+                    currentWorkouts: nextProps.currentWorkouts,
+                    sectionTitle: 'View App Workouts (Read-Only)' 
+                });
+            }
+        }
     }
 
     onDecline() {
@@ -32,11 +59,8 @@ class WorkoutList extends Component {
                     <Text />
                     <Button 
                         onPress={() => {
-                            console.log(workout);
-                            Actions.push('workoutEdit', {
-                                routineToEdit: workout,
-                                sectionTitle: 'Edit Workout Routine' 
-                            });
+                            this.setState({ routineToEdit: workout, routineToView: null });
+                            this.props.workoutsFetch(workout.id);
                         }}
                         styling={{ marginLeft: 75, marginRight: 75 }}
                     >
@@ -53,8 +77,21 @@ class WorkoutList extends Component {
                     </Button>
                 </View>
             );
-        }
-        return null;
+        } 
+        return (
+            <View>
+                <Text />
+                <Button
+                    onPress={() => {
+                        this.setState({ routineToView: workout, routineToEdit: null });
+                        this.props.workoutsFetch(workout.id);
+                    }}
+                    styling={{ marginLeft: 75, marginRight: 75 }}
+                >
+                    View Routine
+                </Button>
+            </View>
+        );
     }
 
     renderRow(workout) {
@@ -98,7 +135,7 @@ class WorkoutList extends Component {
     }
 
     renderListView() {
-        if (this.props.loading) {
+        if (this.props.loading || this.state.routines === null) {
             return (
                 <CardSection>
                     <Spinner size='large' />
@@ -107,7 +144,7 @@ class WorkoutList extends Component {
         }
         return (
             <FlatList
-                data={this.props.routines}
+                data={this.state.routines}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => this.renderRow(item)}
             />
@@ -133,7 +170,7 @@ class WorkoutList extends Component {
                             with Champion's Diary. 
                         </Text>
                         <Text />
-                        <Text>Try viewing these routines using the calendar 
+                        <Text>You can try these routines if you like them using the calendar 
                             on the 'Lifting' main menu!</Text>
                         <Text />
                     </CardSection>
@@ -151,11 +188,15 @@ class WorkoutList extends Component {
 }
 
 const mapStateToProps = state => {
-    return { routines: state.workouts.allRoutines, 
-             loading: state.workouts.loading,
+    const { allRoutines, loading, selectedPanelId, currentWorkouts } = state.workouts;
+    return { routines: allRoutines, 
+             loading,
              user: state.auth.user,
-             expandedPanelId: state.workouts.selectedPanelId };
+             expandedPanelId: selectedPanelId,
+             currentWorkouts
+           };
 };
 
 export default connect(mapStateToProps, { routinesFetch, 
-    routineDelete })(WorkoutList);
+    routineDelete, 
+    workoutsFetch })(WorkoutList);

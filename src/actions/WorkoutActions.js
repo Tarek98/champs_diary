@@ -64,12 +64,10 @@ export const workoutsFetch = (routine_id) => {
 
         firebase.firestore().collection(`/workouts/${routine_id}/workout_days/`)
         .get().then((querySnapshot) => {
-            const currentWorkouts = [];
-                if (!querySnapshot.empty) {
-                    querySnapshot.forEach((workout) => {
-                        currentWorkouts.push({ ...workout._data, id: workout.id });
-                    });
-                }
+                const currentWorkouts = [];
+                querySnapshot.forEach((workout) => {
+                    currentWorkouts.push({ ...workout._data, id: workout.id });
+                });
                 dispatch({
                     type: VIEW_WORKOUT_DETAILS,
                     payload: currentWorkouts
@@ -145,21 +143,37 @@ export const workoutDiaryDelete = (user_id, dairy_id) => {
     };
 };
 
+// Delete a workout routine and all the workout days within it
 export const routineDelete = (routine_id) => {
     return (dispatch) => {
         dispatch({ type: REQUEST_INIT });
 
-        workoutsRef.doc(routine_id).delete()
-        .then(() => {
-            Actions.popTo('workoutMain');
-            Actions.refresh({ successMsg: 'Your workout routine has been deleted!' });
-            dispatch({ type: DIARY_SUBMIT_SUCCESS });
+        workoutsRef.doc(routine_id).collection('workout_days')
+        .get()
+        .then((workoutDays) => {
+            // Delete all documents within routine's workout_days sub-collection
+            workoutDays.forEach((day) => {
+                day.ref.delete()
+                    .catch((error) => console.log(error));
+            });
+
+            return;
         })
-        .catch((error) => {
-            console.log(error);
-            Actions.popTo('workoutMain');
-            Actions.refresh({ errorMsg: 'Error: could not delete your workout...' });
-        });
+        .then(() => {
+            // Delete routine document after deleting nested workout_days
+            workoutsRef.doc(routine_id).delete()
+            .then(() => {
+                Actions.popTo('workoutMain');
+                Actions.refresh({ successMsg: 'Your workout routine has been deleted!' });
+                dispatch({ type: DIARY_SUBMIT_SUCCESS });
+            })
+            .catch((error) => {
+                console.log(error);
+                Actions.popTo('workoutMain');
+                Actions.refresh({ errorMsg: 'Error: could not delete your workout...' });
+            });
+        })
+        .catch((err) => console.log(err));
     };
 };
 

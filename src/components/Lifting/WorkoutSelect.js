@@ -165,8 +165,7 @@ class WorkoutSelect extends Component {
                                 } else {
                                     this.DDL2Value = ' ';
                                 }
-                            }
-                            }
+                            }}
                         />
                         <Dropdown
                             label='Workout'

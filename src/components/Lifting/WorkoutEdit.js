@@ -20,19 +20,9 @@ class WorkoutEdit extends Component {
         this.props.resetLoading();
         this.props.closePanels();
 
-        let routineName = '';
-        let routineId = '';
-        const numExercises = [];
-        const workout_details = [];
-        this.dropdown_data = [];
-
-        if (this.props.routineToEdit !== null) { // editing a pre-existing routine
-            const routine = this.props.routineToEdit;
-            routineName = routine.routine_name;
-            routineId = routine.id;
-
-            this.props.workoutsFetch(routine.id);
-        }
+        const numExercises = []; const workout_details = []; this.dropdown_data = [];
+        let routine_name = ''; let routineId = '';
+        let numWorkouts = 1;
 
         for (let i = 1; i < 8; i++) {
             this.dropdown_data.push({ value: i });
@@ -44,13 +34,36 @@ class WorkoutEdit extends Component {
                 });
             }
         }
-        
+
+        if (this.props.routineToEdit !== null || this.props.routineToView !== null) { 
+            // editing a pre-existing routine
+            const routine = (this.props.routineToEdit === null) ? 
+                (this.props.routineToView) : (this.props.routineToEdit);
+            routine_name = routine.routine_name;
+            routineId = routine.id;
+
+            // editing pre-existing workouts within the routine
+            const workouts = this.props.currentWorkouts;
+            numWorkouts = workouts.length;
+
+            for (let j = 0; j < workouts.length; j++) {
+                numExercises[j] = workouts[j].exercises.length;
+                workout_details[j].name = workouts[j].workout_name;
+                workout_details[j].firestoreID = workouts[j].id;
+
+                for (let k = 0; k < numExercises[j]; k++) {
+                    workout_details[j].exercises[k] = workouts[j].exercises[k];
+                }
+            }
+        }
+
         this.setState({
-            routine_name: routineName, 
+            routine_name,
             routineId,
-            exercises_per_workout: numExercises, 
+            numWorkouts,
+            exercises_per_workout: numExercises,
             workout_details
-        });  
+        });
     }
 
     componentWillReceiveProps(nextProps) {
@@ -65,31 +78,6 @@ class WorkoutEdit extends Component {
             }
             this.props.updateComplete();
         } 
-        if (typeof nextProps.currentWorkouts !== 'undefined') { 
-            // editing pre-existing workouts
-            const workouts = nextProps.currentWorkouts;
-            let numExercisesArr = [];
-            let detailsArr = [];
-
-            for (let j = 0; j < workouts.length; j++) {
-                numExercisesArr = this.state.exercises_per_workout;
-                detailsArr = this.state.workout_details;
-
-                numExercisesArr[j] = workouts[j].exercises.length;
-                detailsArr[j].name = workouts[j].workout_name;
-                detailsArr[j].firestoreID = workouts[j].id;
-
-                for (let k = 0; k < numExercisesArr[j]; k++) {
-                    detailsArr[j].exercises[k] = workouts[j].exercises[k];
-                }
-            }
-
-            this.setState({
-                numWorkouts: workouts.length,
-                exercises_per_workout: numExercisesArr,
-                workout_details: detailsArr
-            });
-        }
     }
 
     onSaveButton() {
@@ -140,7 +128,7 @@ class WorkoutEdit extends Component {
         this.setState({ error: '' });
 
         if (this.props.routineToEdit !== null 
-            && typeof this.props.currentWorkouts !== 'undefined') { 
+            && this.props.currentWorkouts) { 
             const workoutCount = this.props.currentWorkouts.length;
             // update pre-existing workouts for a routine in DB
             for (let x = 0; x < workoutCount; x++) {
@@ -169,7 +157,7 @@ class WorkoutEdit extends Component {
         });
     }
 
-    renderExerciseInputs(workout_day, index) {
+    renderExerciseInputs(workout_day, index, updateInputsDisabled) {
         const input_fields = [];
         const input_names = ['name', 'sets', 'target_reps'];
         const placeholders = ['Name', '3', '6'];
@@ -181,6 +169,7 @@ class WorkoutEdit extends Component {
                     value={
                         String(this.state.workout_details[workout_day].exercises[index][curr_field])
                     }
+                    editable={!updateInputsDisabled}
                     placeholder={placeholders[fieldN]}
                     inputType={curr_field === 'name' ? 'default' : 'numeric'}
                     hideLabel
@@ -196,20 +185,21 @@ class WorkoutEdit extends Component {
         return input_fields;
     }
 
-    renderExercises(workout_day) {
+    renderExercises(workout_day, updateInputsDisabled) {
         const exercises = [];
         
         for (let i = 0; i < this.state.exercises_per_workout[workout_day]; i++) {
             exercises.push(
-                <View>
+                <View key={i}>
                     <CardSection style={[styles.exerciseTable, { paddingRight: 32 }]}>
-                        {this.renderExerciseInputs(workout_day, i)}
+                        {this.renderExerciseInputs(workout_day, i, updateInputsDisabled)}
                         <Switch 
                             value={
                                 this.state.workout_details[workout_day].exercises[i].bw
                             }
                             onValueChange={value => 
                                 this.updateExercise(workout_day, i, 'bw', value)}
+                            disabled={updateInputsDisabled}
                         />
                     </CardSection>
                 </View>
@@ -219,7 +209,7 @@ class WorkoutEdit extends Component {
         return exercises;
     }
 
-    renderWorkoutDays() {
+    renderWorkoutDays(updateInputsDisabled) {
         const workoutDays = [];
 
         for (let i = 0; i < this.state.numWorkouts; i++) {
@@ -228,10 +218,12 @@ class WorkoutEdit extends Component {
                     panelId={i}
                     cardTitle={`Workout Day ${i + 1}`}
                     headerStyle={styles.subTitleContainer}
+                    key={i}
                 >
                     <CardSection>
                         <Input 
                             value={this.state.workout_details[i].name}
+                            editable={!updateInputsDisabled}
                             label="Name" 
                             placeholder="Workout B" 
                             labelStyle={styles.inputLabel}
@@ -249,6 +241,7 @@ class WorkoutEdit extends Component {
                     <CardSection>
                         <Dropdown
                             label="Number of Exercises"
+                            disabled={updateInputsDisabled}
                             data={this.dropdown_data}
                             value={this.state.exercises_per_workout[i]}
                             containerStyle={{ flex: 1, paddingLeft: 5, paddingRight: 10 }}
@@ -267,7 +260,7 @@ class WorkoutEdit extends Component {
                         <Text>Target Reps</Text>
                         <Text>Bodyweight?</Text>
                     </CardSection>
-                    {this.renderExercises(i)}
+                    {this.renderExercises(i, updateInputsDisabled)}
                 </ListItem>
             );
         }
@@ -276,6 +269,9 @@ class WorkoutEdit extends Component {
     }
 
     renderButton() {
+        if (this.props.routineToView !== null) {
+            return null;
+        }
         if (!this.props.loading) {
             return (
                 <CardSection>
@@ -304,61 +300,18 @@ class WorkoutEdit extends Component {
         } 
     }
 
-    renderBody(inputsDisabled) {
-        return (
-        <ScrollView style={{ marginBottom: 12 }}>
-            <Card>
-                <CardSection style={styles.titleContainer}>
-                    <Text style={styles.sectionTitle}>{this.props.sectionTitle}</Text>
-                </CardSection>
-                <CardSection>
-                    <Input 
-                        value={this.state.routine_name}
-                        editable={!inputsDisabled}
-                        label="Name" 
-                        placeholder="My Workout Routine"
-                        labelStyle={styles.inputLabel}
-                        inputTextStyle={styles.inputText}
-                        onChangeText={value => { this.setState({ routine_name: value }); }}
-                        onFocus={() => this.setState({ keyboardAdapt: false })}
-                    />
-                </CardSection>
-                <CardSection>
-                    <Dropdown
-                        label="Number of Workouts Per Week"
-                        disabled={inputsDisabled}
-                        data={this.dropdown_data}
-                        value={this.state.numWorkouts}
-                        containerStyle={{ flex: 1, paddingLeft: 5, paddingRight: 10 }}
-                        onChangeText={(value) => { this.setState({ numWorkouts: value }); }}
-                    />
-                </CardSection>
-            </Card>
-
-            <Card>
-                <CardSection>
-                    <Text>Tap on the workout day(s) below to view or edit them</Text>
-                </CardSection>
-                {this.renderWorkoutDays()}
-            </Card>
-
-            <Card>
-                {this.renderButton()}
-                {this.renderError()}
-            </Card>
-        </ScrollView>
-        );  
-    }
-
     render() {
-        const inputsDisabled = this.props.routineToEdit !== null;
+        const coreInputsDisabled = 
+            (this.props.routineToEdit !== null) || (this.props.routineToView !== null);
+        const updateInputsDisabled = (this.props.routineToView !== null);
         const keyboardBehavior = (Platform.OS === 'ios' ? 'padding' : null);
+        const viewOrEdit = (this.props.routineToView !== null) ? 'view' : 'edit';
 
         return (
         <KeyboardAvoidingView 
-        style={{ flex: 1 }} 
-        behavior={keyboardBehavior}
-        enabled={this.state.keyboardAdapt}
+            style={{ flex: 1 }} 
+            behavior={keyboardBehavior}
+            enabled={this.state.keyboardAdapt}
         >
         <ScrollView style={{ marginBottom: 12 }}>
             <Card>
@@ -368,7 +321,7 @@ class WorkoutEdit extends Component {
                 <CardSection>
                     <Input 
                         value={this.state.routine_name}
-                        editable={!inputsDisabled}
+                        editable={!coreInputsDisabled}
                         label="Name" 
                         placeholder="My Workout Routine"
                         labelStyle={styles.inputLabel}
@@ -380,7 +333,7 @@ class WorkoutEdit extends Component {
                 <CardSection>
                     <Dropdown
                         label="Number of Workouts Per Week"
-                        disabled={inputsDisabled}
+                        disabled={coreInputsDisabled}
                         data={this.dropdown_data}
                         value={this.state.numWorkouts}
                         containerStyle={{ flex: 1, paddingLeft: 5, paddingRight: 10 }}
@@ -391,9 +344,9 @@ class WorkoutEdit extends Component {
 
             <Card>
                 <CardSection>
-                    <Text>Tap on the workout day(s) below to view or edit them</Text>
+                    <Text>{`Tap on the workout day(s) below to ${viewOrEdit} them`}</Text>
                 </CardSection>
-                {this.renderWorkoutDays()}
+                {this.renderWorkoutDays(updateInputsDisabled)}
             </Card>
 
             <Card>
@@ -442,10 +395,10 @@ const styles = {
 };
 
 const mapStateToProps = state => {
-    const { loading, routineId, initiateWorkoutSave, errorMsg, currentWorkouts } = state.workouts;
+    const { loading, routineId, initiateWorkoutSave, errorMsg } = state.workouts;
     const { user } = state.auth;
 
-    return { loading, routineId, initiateWorkoutSave, user, errorMsg, currentWorkouts };
+    return { loading, routineId, initiateWorkoutSave, user, errorMsg };
 };
 
 export default connect(mapStateToProps, 
