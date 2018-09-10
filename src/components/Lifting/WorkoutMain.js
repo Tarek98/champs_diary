@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { ScrollView, Text } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Calendar from 'react-native-calendar-datepicker';
 import Moment from 'moment';
@@ -33,13 +33,13 @@ class WorkoutMain extends Component {
 
     render() {
         return (
-            <View>
+            <ScrollView>
                 <Card>
                     <CardSection>
                         <Button 
                             onPress={() => Actions.workoutEdit({ 
                                 sectionTitle: 'New Workout Routine',
-                                routineToEdit: false 
+                                routineToEdit: null
                             })}
                         >
                             Create a Workout
@@ -54,7 +54,7 @@ class WorkoutMain extends Component {
                 <Card>
                     <CardSection style={{ justifyContent: 'center', alignItems: 'center' }}>
                         <Text style={{ fontWeight: 'bold', textAlign: 'center' }}>
-                            To track your workout or view a previous workout, tap on a date below
+                            To track your workout or view previous workout(s), tap on a date below
                         </Text>
                     </CardSection>
                     <CardSection>
@@ -74,7 +74,7 @@ class WorkoutMain extends Component {
                     </CardSection>
                     {this.renderSuccessOrError()}
                 </Card>
-            </View>
+            </ScrollView>
         );
     }
 }

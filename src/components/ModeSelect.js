@@ -4,11 +4,14 @@ import { Actions } from 'react-native-router-flux';
 import { LoginManager, AccessToken } from 'react-native-fbsdk';
 import { connect } from 'react-redux';
 import firebase from 'react-native-firebase';
+import { purgeStoredState } from 'redux-persist';
+import { persistConfig } from '../App';
 import { Button, Card, CardSection, Spinner } from './common';
 import { loginFBUser } from '../actions';
 
 class ModeSelect extends Component {
     componentWillMount() {
+        purgeStoredState(persistConfig);
         // If a user is logged in when app starts, navigate them to the main app flow (skip )
         if (this.props.user) {
             Actions.main();

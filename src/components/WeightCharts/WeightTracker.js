@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
-import { ScrollView, Text, Dimensions } from 'react-native';
+import { ScrollView, Text, Dimensions, View } from 'react-native';
 import { connect } from 'react-redux';
 import DatePicker from 'react-native-datepicker';
 import { Dropdown } from 'react-native-material-dropdown';
 import { LineChart } from 'react-native-chart-kit';
 import Moment from 'moment';
 import { Card, CardSection, Input, Button, Spinner } from '../common';
-import { submitBodyStats, populateStatsChart, populateStatsInput } from '../../actions';
+import { 
+    submitBodyStats, populateStatsChart, populateStatsInput, resetLoading
+} from '../../actions';
 
 class WeightTracker extends Component {
     constructor() {
@@ -35,6 +37,7 @@ class WeightTracker extends Component {
     }
 
     componentWillMount() {
+        this.props.resetLoading();
         this.props.populateStatsChart(this.props.user.uid, 
             Moment(this.state.chartStartDate).format('YYYYMMDD'));
     }
@@ -91,13 +94,58 @@ class WeightTracker extends Component {
             );
         } 
         return (
-            <LineChart
-                data={selectedChart()}
-                width={width - 12}
-                height={(height / 2) - 75}
-                chartConfig={this.chartConfig}
-            />
+            <View>
+                <LineChart
+                    data={selectedChart()}
+                    width={width - 12}
+                    height={(height / 2) - 75}
+                    chartConfig={this.chartConfig}
+                />
+                <CardSection 
+                    style={{ 
+                        justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}
+                >
+                    <Text style={{ textAlign: 'center', color: 'white' }}>
+                        Date (DD/MM)
+                    </Text>
+                </CardSection>
+            </View>
         ); 
+    }
+
+    renderSaveButton() {
+        if (this.props.loading) {
+            return (
+                <Spinner size='large' />
+            );
+        }
+        return (
+            <Button
+                onPress={() => {
+                    if (this.state.weight === '' || isNaN(this.state.weight)) {
+                        this.setState({ error: 'You must enter your weight!' });
+                    } else if (this.state.weight <= 0 || 
+                        (typeof this.state.waist === 'number' && this.state.waist <= 0)) {
+                        this.setState({ error: 'The numbers must be greater than 0!' });
+                    } else {
+                        const dateCode = Moment(this.state.date).format('YYYYMMDD');
+                        this.setState({ error: '' });
+                        this.props.submitBodyStats(this.props.user.uid,
+                            dateCode,
+                            { 
+                                date: dateCode,
+                                weight: this.state.weight,
+                                waist: this.state.waist,
+                                units: this.state.units
+                            },
+                            Moment(this.state.chartStartDate).format('YYYYMMDD')
+                        );
+                    }
+                }}
+            >
+                Save Stats
+            </Button>
+        );
     }
 
     render() {
@@ -153,31 +201,7 @@ class WeightTracker extends Component {
                     />
                 </CardSection>
                 <CardSection>
-                    <Button
-                        onPress={() => {
-                            if (this.state.weight === '' || isNaN(this.state.weight)) {
-                                this.setState({ error: 'You must enter your weight!' });
-                            } else if (this.state.weight <= 0 || 
-                                (typeof this.state.waist === 'number' && this.state.waist <= 0)) {
-                                this.setState({ error: 'The numbers must be greater than 0!' });
-                            } else {
-                                const dateCode = Moment(this.state.date).format('YYYYMMDD');
-                                this.setState({ error: '' });
-                                this.props.submitBodyStats(this.props.user.uid,
-                                    dateCode,
-                                    { 
-                                        date: dateCode,
-                                        weight: this.state.weight,
-                                        waist: this.state.waist,
-                                        units: this.state.units
-                                    },
-                                    Moment(this.state.chartStartDate).format('YYYYMMDD')
-                                );
-                            }
-                        }}
-                    >
-                        Save Stats
-                    </Button>
+                    {this.renderSaveButton()}
                 </CardSection>
                 {this.renderMessage()}
             </Card>
@@ -249,4 +273,5 @@ const mapStateToProps = state => {
 
 export default connect(mapStateToProps, { submitBodyStats, 
                                             populateStatsChart, 
-                                            populateStatsInput })(WeightTracker);
+                                            populateStatsInput, 
+                                            resetLoading })(WeightTracker);

@@ -10,25 +10,25 @@ import {
     DIARY_HISTORY_FETCHED,
     SHUT_COLLAPSIBLES,
     WORKOUTS_UPDATED,
-    REQUEST_FAILURE
+    REQUEST_FAILURE,
+    RESET_LOADING
 } from './types';
 
 const DB = firebase.firestore();
 const workoutsRef = DB.collection('workouts');
 const usersRef = DB.collection('users');
 
-const queryRoutines = (query, outputArray, dispatch, readyToDispatch) => {
+const queryRoutines = (query, outputArray, dispatch, finished) => {
     // auto action to fetch new data every time '/workouts' documents is updated
     // .onSnapshot() gets real time updates
     query.orderBy('level')
-    .onSnapshot({ includeMetadataChanges: true },
-        (querySnapshot) => {
-            console.log(querySnapshot);
-            querySnapshot.forEach((routine) => {
-                outputArray.push({ ...routine.data(), id: routine.id });
-            });
-            console.log(outputArray);
-            if (readyToDispatch) {
+    .get().then((snap) => {
+            if (!snap.empty) { 
+                snap.forEach((routine) => {
+                    outputArray.push({ ...routine.data(), id: routine.id });
+                });
+            }
+            if (finished) {
                 dispatch({
                     type: ROUTINE_FETCH_SUCCESS,
                     payload: outputArray
@@ -63,12 +63,13 @@ export const workoutsFetch = (routine_id) => {
         });
 
         firebase.firestore().collection(`/workouts/${routine_id}/workout_days/`)
-        .onSnapshot((querySnapshot) => {
+        .get().then((querySnapshot) => {
             const currentWorkouts = [];
-                querySnapshot.forEach((workout) => {
-                    currentWorkouts.push({ ...workout._data, id: workout.id });
-                });
-                console.log(currentWorkouts);
+                if (!querySnapshot.empty) {
+                    querySnapshot.forEach((workout) => {
+                        currentWorkouts.push({ ...workout._data, id: workout.id });
+                    });
+                }
                 dispatch({
                     type: VIEW_WORKOUT_DETAILS,
                     payload: currentWorkouts
@@ -94,7 +95,6 @@ export const getWorkoutDiaryHistory = (user_id, dateSelected) => {
             querySnapshot.forEach((diary) => {
                 history.push({ ...diary.data(), id: diary.id });
             });
-            console.log(history);
             dispatch({
                 type: DIARY_HISTORY_FETCHED,
                 payload: history
@@ -257,6 +257,12 @@ export const workoutUpdate = (routine_id, workout_name, exercises, workout_id, f
             console.log(error);
             dispatch({ type: REQUEST_FAILURE });
         });
+    };
+};
+
+export const resetLoading = () => {
+    return {
+        type: RESET_LOADING
     };
 };
 

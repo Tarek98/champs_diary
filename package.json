@@ -15,6 +15,7 @@
     "q": "^1.5.1",
     "react": "16.4.1",
     "react-native": "0.56.0",
+    "react-native-android-log": "^1.1.0",
     "react-native-calendar-datepicker": "^1.2.2",
     "react-native-chart-kit": "^1.1.6",
     "react-native-datepicker": "^1.7.2",

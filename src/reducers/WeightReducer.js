@@ -4,13 +4,16 @@ import {
     REQUEST_FAILURE,
     CHART_LOADING,
     CHART_UPDATED,
-    BODY_STATS_UPDATED
+    BODY_STATS_UPDATED,
+    RESET_LOADING
 } from '../actions/types';
 
 const INIT_STATE = { loading: false, chartLoading: true };
 
 export default (state = INIT_STATE, action) => {
     switch (action.type) {
+        case RESET_LOADING:
+            return { ...state, loading: false };
         case REQUEST_INIT:
             return { ...state, loading: true, errorMsg: null, successMsg: null };
         case REQUEST_FAILURE:

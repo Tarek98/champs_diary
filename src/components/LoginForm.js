@@ -15,8 +15,8 @@ class LoginForm extends Component {
 
     onButtonPress() {
         const { email, password } = this.props;
-
-        this.props.loginUser({ email, password });
+        // Trim trailing and leading spaces from email before login
+        this.props.loginUser({ email: String(email).trim(), password });
     }
 
     renderError() {

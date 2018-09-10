@@ -34,14 +34,14 @@ export const submitBodyStats = (user_id, doc_id, statsObj, chartStartDate) => {
 };
 
 const pushStatsToChart = (array, date, value) => {
-    array.labels.push(`${Moment(date).date()}/${Moment(date).month()}`);
+    array.labels.push(`${Moment(date).date()}/${Moment(date).month() + 1}`);
     array.datasets[0].data.push(String(value));
 };
 
 export const populateStatsChart = (user_id, monthStartDate) => {
     return (dispatch) => {
-        console.log(user_id);
         dispatch({ type: CHART_LOADING });
+
         const monthEndDate = Moment(monthStartDate).add(1, 'month').format('YYYYMMDD');
         
         usersRef.doc(user_id).collection('body_stats')
@@ -53,7 +53,8 @@ export const populateStatsChart = (user_id, monthStartDate) => {
             const waistArray = { labels: ['O'], datasets: [{ data: [0] }] };
 
             if (!querySnapshot.empty) {
-                let firstIteration = true;
+                let firstIteration = true;  
+
                 querySnapshot.forEach((doc) => {
                     const waistStat = doc.data().waist; 
                     const weightStat = doc.data().weight;  
@@ -68,7 +69,7 @@ export const populateStatsChart = (user_id, monthStartDate) => {
                         weightArray.datasets[0].data[0] = weightStat - 0.01;
                         waistArray.datasets[0].data[0] = waistStat - 0.01;
                         firstIteration = false;
-                    }
+                    } 
                 });
             }
             

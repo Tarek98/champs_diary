@@ -12,7 +12,7 @@ import {
 } from '../../actions';
 
 class WorkoutSelect extends Component {
-    state = { showModal: false };
+    state = { showModal: false, diaryHistory: null };
 
     componentWillMount() {
         this.props.getWorkoutDiaryHistory(this.props.user.uid, this.props.workoutDate);
@@ -20,16 +20,17 @@ class WorkoutSelect extends Component {
 
         this.DDL2Value = ' ';
         this.invalidRoutine = true; this.invalidWorkout = true;
-
-        if (!this.props.loading) {
-            this.populateDDL1(this.props);
-        }
     }
 
     componentWillReceiveProps(nextProps) {
-        this.populateDDL1(nextProps);
+        if (nextProps.routines) {
+            this.populateDDL1(nextProps);
+        }
         if (typeof nextProps.currWorkouts !== 'undefined') {
             this.populateDDL2(nextProps);
+        }
+        if (nextProps.diaryHistory) {
+            this.setState({ diaryHistory: nextProps.diaryHistory });
         }
     }
 
@@ -42,7 +43,8 @@ class WorkoutSelect extends Component {
                 Date: this.props.workoutDate, 
                 Routine: selectedRoutine, 
                 Workout: this.selectedWorkout,
-                diaryToEdit: null
+                diaryToEdit: null,
+                sectionTitle: 'Track Weight & Reps For Atleast 1 Set (Column)'
             });
         }
     }
@@ -66,8 +68,45 @@ class WorkoutSelect extends Component {
         });
     }
 
+    renderListItem(item) {
+        return (
+            <ListItem
+                panelId={item.id}
+                cardTitle={
+                    `${item.routine.name} : ${item.workout.name}`
+                }
+                headerStyle={{ marginLeft: 0, marginRight: 0 }}
+            >
+                <CardSection style={{ flexDirection: 'column' }}>
+                    <Button 
+                        onPress={() => {
+                            Actions.workoutDiary({
+                                diaryToEdit: item,
+                                sectionTitle: 'View Workout History'
+                            });
+                        }}
+                        styling={{ marginLeft: 75, marginRight: 75 }}
+                    >
+                        View workout details
+                    </Button>
+                    <Text />
+                    <Button
+                        onPress={() => {
+                            this.setState({ showModal: !this.state.showModal });
+                        }}
+                        styling={{ marginLeft: 75, 
+                            marginRight: 75, 
+                            backgroundColor: 'red' }}
+                    >   
+                        Delete workout entry    
+                    </Button>
+                </CardSection>
+            </ListItem>
+        );
+    }
+
     renderWorkoutHistory() {
-        const prevDiaries = this.props.diaryHistory;
+        const prevDiaries = this.state.diaryHistory;
 
         if (this.props.loading) {
             return (
@@ -77,9 +116,6 @@ class WorkoutSelect extends Component {
                     </CardSection>
                 </Card>
             );
-        } else if ((prevDiaries === undefined || prevDiaries.length === 0) 
-                || prevDiaries[0].date !== this.props.workoutDate) {
-            return null;
         }
         return (
             <Card>
@@ -89,38 +125,8 @@ class WorkoutSelect extends Component {
                 <CardSection>
                     <FlatList
                         data={prevDiaries}
-                        renderItem={({ item }) => 
-                            <ListItem
-                                panelId={item.id}
-                                cardTitle={
-                                    `${item.routine.name} : ${item.workout.name}`
-                                }
-                                headerStyle={{ marginLeft: 0, marginRight: 0 }}
-                            >
-                                <CardSection style={{ flexDirection: 'column' }}>
-                                    <Button 
-                                        onPress={() => {
-                                            Actions.workoutDiary({
-                                                diaryToEdit: item
-                                            });
-                                        }}
-                                        styling={{ marginLeft: 75, marginRight: 75 }}
-                                    >
-                                        View workout details
-                                    </Button>
-                                    <Text />
-                                    <Button
-                                        onPress={() => {
-                                            this.setState({ showModal: !this.state.showModal });
-                                        }}
-                                        styling={{ marginLeft: 75, 
-                                            marginRight: 75, 
-                                            backgroundColor: 'red' }}
-                                    >   
-                                        Delete workout entry    
-                                    </Button>
-                                </CardSection>
-                            </ListItem>
+                        renderItem={({ item }) =>
+                            this.renderListItem(item)
                         }
                     />
                 </CardSection>

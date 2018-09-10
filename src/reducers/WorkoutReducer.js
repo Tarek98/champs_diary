@@ -8,13 +8,17 @@ import {
     DIARY_HISTORY_FETCHED,
     REQUEST_FAILURE,
     ROUTINE_CREATED,
-    WORKOUTS_UPDATED
+    WORKOUTS_UPDATED,
+    RESET_LOADING
  } from '../actions/types';
 
  const INITIAL_STATE = { loading: true };
 
  export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
+        case RESET_LOADING:
+        case DIARY_SUBMIT_SUCCESS: 
+            return { ...state, loading: false };
         case REQUEST_INIT:
             return { ...state, loading: true };
         case REQUEST_FAILURE:
@@ -28,8 +32,6 @@ import {
             return { ...state, initiateWorkoutSave: false, loading: false };                
         case ROUTINE_FETCH_SUCCESS:
             return { allRoutines: action.payload, loading: false };
-        case DIARY_SUBMIT_SUCCESS: 
-            return { ...state, loading: false };
         case DIARY_HISTORY_FETCHED:
             return { ...state, diaryHistory: action.payload, loading: false };
         case VIEW_WORKOUT_DETAILS:

@@ -55,7 +55,7 @@ export const logoutUser = () => {
       firebase.auth().signOut()
         .then(() => {
             dispatch({ type: LOGOUT_SUCCESS });
-            Actions.auth();
+            Actions.popTo('modeSelect');
         })
         .catch((error) => {
             console.log(error);

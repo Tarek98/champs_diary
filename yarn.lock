@@ -5421,6 +5421,10 @@ react-lifecycles-compat@^1.0.2:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-1.1.4.tgz#fc005c72849b7ed364de20a0f64ff58ebdc2009a"
 
+react-native-android-log@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-android-log/-/react-native-android-log-1.1.0.tgz#44b3fb16d15ffc2cbc6155a365aae745e3bed21a"
+
 react-native-branch@2.2.5:
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/react-native-branch/-/react-native-branch-2.2.5.tgz#4074dd63b4973e6397d9ce50e97b57c77a518e9d"

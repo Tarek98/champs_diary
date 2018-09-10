@@ -32,7 +32,8 @@ class WorkoutList extends Component {
                     <Text />
                     <Button 
                         onPress={() => {
-                            Actions.workoutEdit({
+                            console.log(workout);
+                            Actions.push('workoutEdit', {
                                 routineToEdit: workout,
                                 sectionTitle: 'Edit Workout Routine' 
                             });
@@ -107,6 +108,7 @@ class WorkoutList extends Component {
         return (
             <FlatList
                 data={this.props.routines}
+                keyExtractor={(item) => item.id}
                 renderItem={({ item }) => this.renderRow(item)}
             />
         );
@@ -124,12 +126,15 @@ class WorkoutList extends Component {
                 </Card>
                 {this.renderListView()}
                 <Card>
-                    <CardSection>
+                    <CardSection style={{ flexDirection: 'column' }}>
+                        <Text style={{ fontWeight: 'bold' }}>NOTE: </Text>
                         <Text>
                             Routines with grey-colored headers are pre-packaged
-                            with Champion's Diary. Try or view these routines using the calendar 
-                            on the 'Lifting' main menu!
+                            with Champion's Diary. 
                         </Text>
+                        <Text />
+                        <Text>Try viewing these routines using the calendar 
+                            on the 'Lifting' main menu!</Text>
                         <Text />
                     </CardSection>
                 </Card>

@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { ScrollView, Text } from 'react-native';
+import { ScrollView, Text, KeyboardAvoidingView, Platform } from 'react-native';
 import { Card, CardSection, Button, Input, Spinner } from '../common';
-import { submitWorkoutDiary } from '../../actions';
+import { submitWorkoutDiary, resetLoading } from '../../actions';
 
 class WorkoutDiary extends Component {
     constructor() {
         super();
-        this.state = { errorMsg: '' };
+        this.state = { errorMsg: '', keyboardAdapt: true };
     }
 
     componentWillMount() {
+        this.props.resetLoading();
         if (this.props.diaryToEdit !== null) { // if editing a previous diary
             this.diary_container = this.props.diaryToEdit;
             this.current_diary = this.diary_container.diary_entries;
@@ -113,14 +114,17 @@ class WorkoutDiary extends Component {
 
     renderSets(exercise_info, input_type, exercise_index) {
         const allSets = [];
-        // // To-do: Allow 4 digits with decimal point for each entry?            
 
         for (let i = 0; i < exercise_info.sets; i++) {
             const currVal = this.current_diary[exercise_index]['set_' + i][input_type];
             const currInputLabel = (currVal === 0) ? '' : currVal;
+            const inputValue = 
+                (Boolean(this.props.diaryToEdit) === true) ?
+                    String(currInputLabel) : null;            
+
             allSets.push(
                 <Input 
-                    value={String(currInputLabel)}
+                    value={inputValue}
                     editable={this.props.diaryToEdit === null}
                     placeholder='___' 
                     inputTextStyle={styles.inputStyle}
@@ -191,9 +195,24 @@ class WorkoutDiary extends Component {
     }
 
     render() {
+        const keyboardBehavior = (Platform.OS === 'ios' ? 'padding' : null);
+
         return (
+            <KeyboardAvoidingView 
+                style={{ flex: 1 }}
+                behavior={keyboardBehavior}
+                enabled={this.state.keyboardAdapt}
+            >
             <ScrollView style={{ marginBottom: 25 }}>
                 <Card style={{ borderColor: 'green', borderBottomWidth: 1 }}>
+                    {this.props.sectionTitle ? 
+                        <CardSection style={{ justifyContent: 'center', backgroundColor: 'black' }}>
+                            <Text style={{ color: 'white' }}>
+                                {this.props.sectionTitle}
+                            </Text>
+                        </CardSection>
+                        : null
+                    }
                     <CardSection style={{ flexDirection: 'column' }}>
                         <Text>Name: {this.diary_container.workout.name}</Text>
                         <Text>Date: {this.diary_container.date}</Text>
@@ -202,6 +221,7 @@ class WorkoutDiary extends Component {
                 {this.renderExercises()}
                 {this.renderSaveButton()}
             </ScrollView>
+            </KeyboardAvoidingView>
         );
     }
 }
@@ -210,7 +230,8 @@ const styles = {
     inputStyle: {
         fontSize: 16, 
         paddingRight: 2.5, 
-        paddingLeft: 2.5
+        paddingLeft: 2.5,
+        height: 30
     },
     errorMsgStyle: {
         fontSize: 14,
@@ -233,4 +254,4 @@ const mapStateToProps = state => {
     return { isConnected, user, loading };
 };
 
-export default connect(mapStateToProps, { submitWorkoutDiary })(WorkoutDiary);
+export default connect(mapStateToProps, { submitWorkoutDiary, resetLoading })(WorkoutDiary);
