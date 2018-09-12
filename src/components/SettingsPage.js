@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, Linking } from 'react-native';
 import { connect } from 'react-redux';
 import { logoutUser } from '../actions';
 import { Card, CardSection, Button, Spinner } from './common';
@@ -41,6 +41,7 @@ class SettingsPage extends Component {
                 (`${this.props.user.displayName} (Facebook)`) : (this.props.user.email);
 
             return (
+                <View>
                 <Card>
                     <CardSection>
                         <Text>You are logged in as {userName}</Text>
@@ -50,21 +51,27 @@ class SettingsPage extends Component {
                         {this.renderLogoutButton()}
                     </CardSection>
                 </Card>
+                <Card>
+                    <CardSection 
+                        style={{ 
+                            justifyContent: 'center', alignItems: 'center', flexDirection: 'column' 
+                        }}
+                    >
+                        <Text>
+                            The icons used by this app are made by Icons8: 
+                        </Text>
+                        <Text 
+                            style={{ color: 'blue' }} 
+                            onPress={() => Linking.openURL('https://icons8.com/')}
+                        >
+                            https://icons8.com/
+                        </Text> 
+                    </CardSection>
+                </Card>
+                </View>
             );
         }
-        // Else display offline settings
-        return (
-            <Card>
-                <CardSection>
-                    <Text>You are not logged in!</Text>
-                </CardSection>
-                <CardSection>
-                    <Button>
-                        Back To Main Menu
-                    </Button>
-                </CardSection>
-            </Card>
-        );
+        return null;
     }
 }
 

@@ -7,19 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
-		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
-		00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302DC1ABCB9D200DB3ED1 /* libRCTNetwork.a */; };
-		00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
 		00E356F31AD99517003FC87E /* champs_diaryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* champs_diaryTests.m */; };
-		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
-		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
-		139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
+		06F1C36ED9845BEAD78BE276 /* libPods-champs_diary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FDDF7BBE21B1EA77424E079 /* libPods-champs_diary.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		1885823E3DD1FE5B75B69217 /* libPods-champs_diaryTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 851867F99F8FBCB71086830F /* libPods-champs_diaryTests.a */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -33,23 +28,21 @@
 		2D16E6881FA4F8E400B85C8A /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16E6891FA4F8E400B85C8A /* libReact.a */; };
 		2DCD954D1E0B4F2C00145EB5 /* champs_diaryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* champs_diaryTests.m */; };
 		2DF0FFEE2056DD460020B375 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3EA31DF850E9000B6D8A /* libReact.a */; };
-		926EDFFE2E386697B5C58DA2 /* libPods-champs_diaryTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F574AEB42140725900579291 /* libPods-champs_diaryTests.a */; };
 		950AD3D28A0142209E123C70 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A98141A367634E899F21A672 /* libRNFirebase.a */; };
-		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
-		C5D4EB3985962E7ABA5B35A7 /* libPods-champs_diaryTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E1CEF8B939840B5EB616781A /* libPods-champs_diaryTests.a */; };
-		F574AEB32140725100579291 /* libPods-champs_diary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADD10D2FA8FED91A1C98B03D /* libPods-champs_diary.a */; };
-		F574AEB6214072CE00579291 /* libRCTFBSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5948B312140316500A74FE4 /* libRCTFBSDK.a */; };
-		F574AEEF2140735200579291 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
-		F574AF382140754400579291 /* libFBSDKLoginKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F574AF372140754400579291 /* libFBSDKLoginKit.a */; };
-		F574AF632140754E00579291 /* libFBSDKCoreKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F574AF622140754E00579291 /* libFBSDKCoreKit.a */; };
-		F574AF742140758E00579291 /* libFBSDKShareKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F574AF732140758E00579291 /* libFBSDKShareKit.a */; };
-		F580D3A920F6D857004B96C3 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		F585511220F6DE7700605603 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F58550EB20F6DE7600605603 /* GoogleService-Info.plist */; };
+		F58A2F39214968B40078A3B8 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
+		F58A2F3A214968CC0078A3B8 /* libRCTFBSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5948B312140316500A74FE4 /* libRCTFBSDK.a */; };
+		F58A2F9521496BB20078A3B8 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
+		F58A2FBE21496BCC0078A3B8 /* libRCTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302DC1ABCB9D200DB3ED1 /* libRCTNetwork.a */; };
+		F58A2FBF21496BD40078A3B8 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
+		F58A2FC021496BDC0078A3B8 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
+		F58A2FC121496BE00078A3B8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157351DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
+		F58A2FC221496BE80078A3B8 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
+		F58A2FC321496BEF0078A3B8 /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
 		F5948B6F2140393E00A74FE4 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5948B412140393600A74FE4 /* FBSDKLoginKit.framework */; };
 		F5948B712140393E00A74FE4 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5948B6B2140393A00A74FE4 /* FBSDKShareKit.framework */; };
 		F5948B732140393E00A74FE4 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5948B6C2140393B00A74FE4 /* Bolts.framework */; };
 		F5948B752140393E00A74FE4 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5948B6D2140393E00A74FE4 /* FBSDKCoreKit.framework */; };
-		F5AA3F0421407AD7002D42E3 /* libRCTImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302C01ABCB91800DB3ED1 /* libRCTImage.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -366,6 +359,7 @@
 		00E356EE1AD99517003FC87E /* champs_diaryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = champs_diaryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* champs_diaryTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = champs_diaryTests.m; sourceTree = "<group>"; };
+		01F40F378EDF8DD927E060ED /* Pods-champs_diary.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-champs_diary.release.xcconfig"; path = "Pods/Target Support Files/Pods-champs_diary/Pods-champs_diary.release.xcconfig"; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* champs_diary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = champs_diary.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -379,26 +373,26 @@
 		2D02E47B1E0B4A5D006451C7 /* champs_diary-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "champs_diary-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* champs_diary-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "champs_diary-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		4FDDF7BBE21B1EA77424E079 /* libPods-champs_diary.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-champs_diary.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5B0AF2E6ED64A60172132486 /* Pods-champs_diary.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-champs_diary.debug.xcconfig"; path = "Pods/Target Support Files/Pods-champs_diary/Pods-champs_diary.debug.xcconfig"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
-		6EDD7B03485A6D884217A33A /* Pods-champs_diary.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-champs_diary.debug.xcconfig"; path = "Pods/Target Support Files/Pods-champs_diary/Pods-champs_diary.debug.xcconfig"; sourceTree = "<group>"; };
-		778B0DF83BE43B35FC59FF24 /* Pods-champs_diaryTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-champs_diaryTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-champs_diaryTests/Pods-champs_diaryTests.release.xcconfig"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
+		851867F99F8FBCB71086830F /* libPods-champs_diaryTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-champs_diaryTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8B109DA883F619C8D7B207DB /* Pods-champs_diaryTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-champs_diaryTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-champs_diaryTests/Pods-champs_diaryTests.release.xcconfig"; sourceTree = "<group>"; };
 		A4AF384D11084C068E462B54 /* libRCTFBSDK.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTFBSDK.a; sourceTree = "<group>"; };
 		A98141A367634E899F21A672 /* libRNFirebase.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFirebase.a; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
-		ADD10D2FA8FED91A1C98B03D /* libPods-champs_diary.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-champs_diary.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		C27582D753FD5E0E8B2CBD33 /* Pods-champs_diary.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-champs_diary.release.xcconfig"; path = "Pods/Target Support Files/Pods-champs_diary/Pods-champs_diary.release.xcconfig"; sourceTree = "<group>"; };
-		E1CEF8B939840B5EB616781A /* libPods-champs_diaryTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-champs_diaryTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E4195655AAA5DCF5FB6618B9 /* Pods-champs_diaryTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-champs_diaryTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-champs_diaryTests/Pods-champs_diaryTests.debug.xcconfig"; sourceTree = "<group>"; };
+		DFAB904D023CA5B5EA779AC0 /* Pods-champs_diaryTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-champs_diaryTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-champs_diaryTests/Pods-champs_diaryTests.debug.xcconfig"; sourceTree = "<group>"; };
 		F372F31F2E5F41A98EF33D22 /* RCTFBSDK.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTFBSDK.xcodeproj; path = "../node_modules/react-native-fbsdk/ios/RCTFBSDK.xcodeproj"; sourceTree = "<group>"; };
 		F574AE04214056E300579291 /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F574AE062140571C00579291 /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		F574AEB42140725900579291 /* libPods-champs_diaryTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libPods-champs_diaryTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F574AF372140754400579291 /* libFBSDKLoginKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFBSDKLoginKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F574AF622140754E00579291 /* libFBSDKCoreKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFBSDKCoreKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F574AF732140758E00579291 /* libFBSDKShareKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFBSDKShareKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F58550EB20F6DE7600605603 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "champs_diary/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		F58A2E7B214958020078A3B8 /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		F58A2F4A21496A180078A3B8 /* libFBSDKLoginKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFBSDKLoginKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F5948B412140393600A74FE4 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		F5948B6B2140393A00A74FE4 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
 		F5948B6C2140393B00A74FE4 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
@@ -417,8 +411,7 @@
 				F5948B712140393E00A74FE4 /* FBSDKShareKit.framework in Frameworks */,
 				140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */,
 				F5948B6F2140393E00A74FE4 /* FBSDKLoginKit.framework in Frameworks */,
-				C5D4EB3985962E7ABA5B35A7 /* libPods-champs_diaryTests.a in Frameworks */,
-				926EDFFE2E386697B5C58DA2 /* libPods-champs_diaryTests.a in Frameworks */,
+				1885823E3DD1FE5B75B69217 /* libPods-champs_diaryTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -426,23 +419,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F5AA3F0421407AD7002D42E3 /* libRCTImage.a in Frameworks */,
-				F574AF742140758E00579291 /* libFBSDKShareKit.a in Frameworks */,
-				F574AF632140754E00579291 /* libFBSDKCoreKit.a in Frameworks */,
-				F574AF382140754400579291 /* libFBSDKLoginKit.a in Frameworks */,
-				F574AEEF2140735200579291 /* libRCTText.a in Frameworks */,
-				F574AEB6214072CE00579291 /* libRCTFBSDK.a in Frameworks */,
-				F574AEB32140725100579291 /* libPods-champs_diary.a in Frameworks */,
-				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
-				F580D3A920F6D857004B96C3 /* libRCTAnimation.a in Frameworks */,
-				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
-				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
-				133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */,
-				00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */,
-				139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */,
-				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
-				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
+				F58A2FC321496BEF0078A3B8 /* libRCTSettings.a in Frameworks */,
+				F58A2FC221496BE80078A3B8 /* libRCTActionSheet.a in Frameworks */,
+				F58A2FC121496BE00078A3B8 /* libRCTAnimation.a in Frameworks */,
+				F58A2FC021496BDC0078A3B8 /* libRCTBlob.a in Frameworks */,
+				F58A2FBF21496BD40078A3B8 /* libRCTWebSocket.a in Frameworks */,
+				F58A2FBE21496BCC0078A3B8 /* libRCTNetwork.a in Frameworks */,
+				F58A2F9521496BB20078A3B8 /* libRCTText.a in Frameworks */,
+				F58A2F3A214968CC0078A3B8 /* libRCTFBSDK.a in Frameworks */,
+				F58A2F39214968B40078A3B8 /* libRCTLinking.a in Frameworks */,
 				950AD3D28A0142209E123C70 /* libRNFirebase.a in Frameworks */,
+				06F1C36ED9845BEAD78BE276 /* libPods-champs_diary.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -592,10 +579,11 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F58A2F4A21496A180078A3B8 /* libFBSDKLoginKit.a */,
+				F58A2E7B214958020078A3B8 /* libReact.a */,
 				F574AF732140758E00579291 /* libFBSDKShareKit.a */,
 				F574AF622140754E00579291 /* libFBSDKCoreKit.a */,
 				F574AF372140754400579291 /* libFBSDKLoginKit.a */,
-				F574AEB42140725900579291 /* libPods-champs_diaryTests.a */,
 				F574AE062140571C00579291 /* libReact.a */,
 				F574AE04214056E300579291 /* libReact.a */,
 				F5948B6C2140393B00A74FE4 /* Bolts.framework */,
@@ -603,10 +591,21 @@
 				F5948B412140393600A74FE4 /* FBSDKLoginKit.framework */,
 				F5948B6B2140393A00A74FE4 /* FBSDKShareKit.framework */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
-				ADD10D2FA8FED91A1C98B03D /* libPods-champs_diary.a */,
-				E1CEF8B939840B5EB616781A /* libPods-champs_diaryTests.a */,
+				4FDDF7BBE21B1EA77424E079 /* libPods-champs_diary.a */,
+				851867F99F8FBCB71086830F /* libPods-champs_diaryTests.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		30C95921C651F6B37BF92A36 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				5B0AF2E6ED64A60172132486 /* Pods-champs_diary.debug.xcconfig */,
+				01F40F378EDF8DD927E060ED /* Pods-champs_diary.release.xcconfig */,
+				DFAB904D023CA5B5EA779AC0 /* Pods-champs_diaryTests.debug.xcconfig */,
+				8B109DA883F619C8D7B207DB /* Pods-champs_diaryTests.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 		5E91572E1DD0AC6500FF2AA8 /* Products */ = {
@@ -667,7 +666,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				F50EA9DC20F2D2580058BE24 /* Recovered References */,
-				BF057907321FF4DB3892C1CA /* Pods */,
+				30C95921C651F6B37BF92A36 /* Pods */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -692,17 +691,6 @@
 				2D16E6721FA4F8DC00B85C8A /* libRCTBlob-tvOS.a */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		BF057907321FF4DB3892C1CA /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				6EDD7B03485A6D884217A33A /* Pods-champs_diary.debug.xcconfig */,
-				C27582D753FD5E0E8B2CBD33 /* Pods-champs_diary.release.xcconfig */,
-				E4195655AAA5DCF5FB6618B9 /* Pods-champs_diaryTests.debug.xcconfig */,
-				778B0DF83BE43B35FC59FF24 /* Pods-champs_diaryTests.release.xcconfig */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 		F50EA9DC20F2D2580058BE24 /* Recovered References */ = {
@@ -746,7 +734,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "champs_diaryTests" */;
 			buildPhases = (
-				B072301CA7B0E486BB325BF2 /* [CP] Check Pods Manifest.lock */,
+				1F2348F95DC3DF7EC217AC3F /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
@@ -765,12 +753,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "champs_diary" */;
 			buildPhases = (
-				B33639092F59CD5585FA50EC /* [CP] Check Pods Manifest.lock */,
+				D0BA3FAA827179C399EB39EE /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				78CB15C70D8A743B66B2ABE2 /* [CP] Copy Pods Resources */,
+				F687C3C62296F5A536BE63C3 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1268,41 +1256,7 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
 		};
-		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Bundle React Native Code And Images";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
-		};
-		78CB15C70D8A743B66B2ABE2 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-champs_diary/Pods-champs_diary-resources.sh",
-				"${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle",
-				"${PODS_CONFIGURATION_BUILD_DIR}/gRPC/gRPCCertificates.bundle",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FacebookSDKStrings.bundle",
-				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/gRPCCertificates.bundle",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-champs_diary/Pods-champs_diary-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B072301CA7B0E486BB325BF2 /* [CP] Check Pods Manifest.lock */ = {
+		1F2348F95DC3DF7EC217AC3F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1320,7 +1274,21 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		B33639092F59CD5585FA50EC /* [CP] Check Pods Manifest.lock */ = {
+		2D02E4CB1E0B4B27006451C7 /* Bundle React Native Code And Images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Bundle React Native Code And Images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+		};
+		D0BA3FAA827179C399EB39EE /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1336,6 +1304,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F687C3C62296F5A536BE63C3 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-champs_diary/Pods-champs_diary-resources.sh",
+				"${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/gRPC/gRPCCertificates.bundle",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FacebookSDKStrings.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/gRPCCertificates.bundle",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-champs_diary/Pods-champs_diary-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1405,7 +1393,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E4195655AAA5DCF5FB6618B9 /* Pods-champs_diaryTests.debug.xcconfig */;
+			baseConfigurationReference = DFAB904D023CA5B5EA779AC0 /* Pods-champs_diaryTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = 43BPLJ72SL;
@@ -1442,7 +1430,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 778B0DF83BE43B35FC59FF24 /* Pods-champs_diaryTests.release.xcconfig */;
+			baseConfigurationReference = 8B109DA883F619C8D7B207DB /* Pods-champs_diaryTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -1476,7 +1464,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6EDD7B03485A6D884217A33A /* Pods-champs_diary.debug.xcconfig */;
+			baseConfigurationReference = 5B0AF2E6ED64A60172132486 /* Pods-champs_diary.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1513,7 +1501,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C27582D753FD5E0E8B2CBD33 /* Pods-champs_diary.release.xcconfig */;
+			baseConfigurationReference = 01F40F378EDF8DD927E060ED /* Pods-champs_diary.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
