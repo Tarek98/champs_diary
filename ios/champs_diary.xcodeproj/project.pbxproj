@@ -39,6 +39,7 @@
 		F58A2FC121496BE00078A3B8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157351DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		F58A2FC221496BE80078A3B8 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		F58A2FC321496BEF0078A3B8 /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
+		F58A30C92149E8930078A3B8 /* libRCTImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302C01ABCB91800DB3ED1 /* libRCTImage.a */; };
 		F5948B6F2140393E00A74FE4 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5948B412140393600A74FE4 /* FBSDKLoginKit.framework */; };
 		F5948B712140393E00A74FE4 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5948B6B2140393A00A74FE4 /* FBSDKShareKit.framework */; };
 		F5948B732140393E00A74FE4 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5948B6C2140393B00A74FE4 /* Bolts.framework */; };
@@ -393,6 +394,7 @@
 		F58550EB20F6DE7600605603 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "champs_diary/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		F58A2E7B214958020078A3B8 /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F58A2F4A21496A180078A3B8 /* libFBSDKLoginKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libFBSDKLoginKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		F58A3172214A1A540078A3B8 /* champs_diary.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = champs_diary.entitlements; path = champs_diary/champs_diary.entitlements; sourceTree = "<group>"; };
 		F5948B412140393600A74FE4 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		F5948B6B2140393A00A74FE4 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
 		F5948B6C2140393B00A74FE4 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
@@ -419,6 +421,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F58A30C92149E8930078A3B8 /* libRCTImage.a in Frameworks */,
 				F58A2FC321496BEF0078A3B8 /* libRCTSettings.a in Frameworks */,
 				F58A2FC221496BE80078A3B8 /* libRCTActionSheet.a in Frameworks */,
 				F58A2FC121496BE00078A3B8 /* libRCTAnimation.a in Frameworks */,
@@ -541,6 +544,7 @@
 		13B07FAE1A68108700A75B9A /* champs_diary */ = {
 			isa = PBXGroup;
 			children = (
+				F58A3172214A1A540078A3B8 /* champs_diary.entitlements */,
 				F58550EB20F6DE7600605603 /* GoogleService-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -821,6 +825,11 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 43BPLJ72SL;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -1467,6 +1476,7 @@
 			baseConfigurationReference = 5B0AF2E6ED64A60172132486 /* Pods-champs_diary.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = champs_diary/champs_diary.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 43BPLJ72SL;
@@ -1504,6 +1514,7 @@
 			baseConfigurationReference = 01F40F378EDF8DD927E060ED /* Pods-champs_diary.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = champs_diary/champs_diary.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 43BPLJ72SL;
 				ENABLE_BITCODE = YES;
