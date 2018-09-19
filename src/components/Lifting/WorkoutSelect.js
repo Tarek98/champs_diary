@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList } from 'react-native';
+import { ScrollView, Text, FlatList } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { Dropdown } from 'react-native-material-dropdown';
@@ -43,7 +43,7 @@ class WorkoutSelect extends Component {
                 Date: this.props.workoutDate, 
                 Routine: selectedRoutine, 
                 Workout: this.selectedWorkout,
-                diaryToEdit: null,
+                readOnlyDiary: null,
                 sectionTitle: 'Track Weight & Reps For Atleast 1 Set (Column)'
             });
         }
@@ -81,7 +81,7 @@ class WorkoutSelect extends Component {
                     <Button 
                         onPress={() => {
                             Actions.workoutDiary({
-                                diaryToEdit: item,
+                                readOnlyDiary: item,
                                 sectionTitle: 'View Workout History'
                             });
                         }}
@@ -119,8 +119,21 @@ class WorkoutSelect extends Component {
         }
         return (
             <Card>
-                <CardSection>
-                    <Text>Workout History for {this.props.workoutDate}</Text>
+                <CardSection style={styles.headerContainer}>
+                    <Text style={styles.headerText}>
+                        Workout History for {this.props.workoutDate}
+                    </Text>
+                </CardSection>
+                <CardSection style={{ justifyContent: 'center', alignItems: 'center' }}>
+                {prevDiaries !== null && prevDiaries.length > 0 ? 
+                    <Text style={{ fontWeight: 'bold', textAlign: 'center' }}>
+                        Tap on the workout(s) below to view or delete them
+                    </Text>
+                    :
+                    <Text style={{ textAlign: 'center' }}>
+                        You have not tracked any workouts yet on this day
+                    </Text>
+                }
                 </CardSection>
                 <CardSection>
                     <FlatList
@@ -136,8 +149,13 @@ class WorkoutSelect extends Component {
 
     render() {
         return (
-            <View>
+            <ScrollView>
                 <Card>
+                    <CardSection style={[styles.headerContainer, { backgroundColor: '#E55300' }]}>
+                        <Text style={styles.headerText}>
+                            Please select both a routine and a workout
+                        </Text>
+                    </CardSection>
                     <CardSection>
                         <Input
                             label='Date'
@@ -201,10 +219,23 @@ class WorkoutSelect extends Component {
                 >
                     Are you sure you want to delete this entry?
                 </Confirm>
-            </View>
+            </ScrollView>
         );
     }
 }
+
+const styles = {
+    headerContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'black'
+    },
+    headerText: {
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color: 'white' 
+    }
+};
 
 const mapStateToProps = state => {
     const { allRoutines, currentWorkouts, diaryHistory, loading, selectedPanelId } = state.workouts;

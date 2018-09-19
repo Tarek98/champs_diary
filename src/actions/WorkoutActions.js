@@ -18,27 +18,12 @@ const DB = firebase.firestore();
 const workoutsRef = DB.collection('workouts');
 const usersRef = DB.collection('users');
 
-const queryRoutines = (query, outputArray, dispatch, finished) => {
-    // auto action to fetch new data every time '/workouts' documents is updated
-    // .onSnapshot() gets real time updates
-    query.orderBy('level')
-    .get().then((snap) => {
-            if (!snap.empty) { 
-                snap.forEach((routine) => {
-                    outputArray.push({ ...routine.data(), id: routine.id });
-                });
-            }
-            if (finished) {
-                dispatch({
-                    type: ROUTINE_FETCH_SUCCESS,
-                    payload: outputArray
-                });
-            }
-        }, 
-        (error) => {
-            console.log(error);
-        }
-    );
+const addRoutinesToArray = (routines, outputArray) => {
+    if (!routines.empty) { 
+        routines.forEach((routine) => {
+            outputArray.push({ ...routine.data(), id: routine.id });
+        });
+    }
 };
 
 export const routinesFetch = (user_id) => {
@@ -50,9 +35,21 @@ export const routinesFetch = (user_id) => {
         dispatch({
             type: REQUEST_INIT
         });
-
-        queryRoutines(query1, allRoutines, dispatch, false);
-        queryRoutines(query2, allRoutines, dispatch, true);
+        query1.orderBy('level').get()
+        .then((snap1) => {
+            addRoutinesToArray(snap1, allRoutines);
+            return;
+        }).then(() => {
+            query2.orderBy('level').get()
+            .then((snap2) => {
+                addRoutinesToArray(snap2, allRoutines);
+                dispatch({
+                    type: ROUTINE_FETCH_SUCCESS,
+                    payload: allRoutines
+                });
+            }).catch(error => console.log(error));
+        })
+        .catch(error => console.log(error));
     };
 };
 

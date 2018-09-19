@@ -12,8 +12,8 @@ class WorkoutDiary extends Component {
 
     componentWillMount() {
         this.props.resetLoading();
-        if (this.props.diaryToEdit !== null) { // if editing a previous diary
-            this.diary_container = this.props.diaryToEdit;
+        if (this.props.readOnlyDiary !== null) { // if viewing a previous diary
+            this.diary_container = this.props.readOnlyDiary;
             this.current_diary = this.diary_container.diary_entries;
             this.exercises_arr = this.current_diary;
         } else { // setup new diary
@@ -119,13 +119,13 @@ class WorkoutDiary extends Component {
             const currVal = this.current_diary[exercise_index]['set_' + i][input_type];
             const currInputLabel = (currVal === 0) ? '' : currVal;
             const inputValue = 
-                (Boolean(this.props.diaryToEdit) === true) ?
+                (Boolean(this.props.readOnlyDiary) === true) ?
                     String(currInputLabel) : null;            
 
             allSets.push(
                 <Input 
                     value={inputValue}
-                    editable={this.props.diaryToEdit === null}
+                    editable={this.props.readOnlyDiary === null}
                     placeholder='___' 
                     inputTextStyle={styles.inputStyle}
                     inputType='numeric'
@@ -177,7 +177,7 @@ class WorkoutDiary extends Component {
     }
 
     renderSaveButton() {
-        if (this.props.diaryToEdit) {
+        if (this.props.readOnlyDiary) {
             return null;
         }
         return (

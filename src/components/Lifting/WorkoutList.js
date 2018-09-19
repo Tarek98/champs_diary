@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Linking, FlatList } from 'react-native';
+import { Text, View, Linking, FlatList, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { CardSection, Card, ListItem, Spinner, Button, Confirm } from '../common';
@@ -153,7 +153,7 @@ class WorkoutList extends Component {
 
     render() {
         return (
-            <View>
+            <ScrollView>
                 <Card>
                     <CardSection style={{ justifyContent: 'center', alignItems: 'center' }}>
                         <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>
@@ -182,7 +182,7 @@ class WorkoutList extends Component {
                 >
                     Are you sure you want to delete this workout?
                 </Confirm>
-            </View>
+            </ScrollView>
         );
     }   
 }

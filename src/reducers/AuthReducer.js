@@ -38,6 +38,7 @@ export default (state = INITIAL_STATE, action) => {
                 case 'auth/email-already-in-use':
                     errorCode = 'E-mail/password combination is false.';
                     break;
+                case 'Facebook login has failed':
                 case 'auth/network-request-failed':
                     errorCode = 'Login failed, check your network connection.';
                     break;

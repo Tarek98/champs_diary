@@ -55,7 +55,8 @@ class WorkoutMain extends Component {
                 <Card>
                     <CardSection style={{ justifyContent: 'center', alignItems: 'center' }}>
                         <Text style={{ fontWeight: 'bold', textAlign: 'center' }}>
-                            To track your workout or view previous workout(s), tap on a date below
+                            To track your workout or view previous workouts you tracked,
+                            tap on a date below
                         </Text>
                     </CardSection>
                     <CardSection>

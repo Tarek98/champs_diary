@@ -26,7 +26,7 @@ class WorkoutEdit extends Component {
 
         for (let i = 1; i < 8; i++) {
             this.dropdown_data.push({ value: i });
-            numExercises.push(1); // Assuming all workout days have 1 exercise initially
+            numExercises.push(1); // Assuming all workouts have 1 exercise initially
             workout_details.push({ name: '', exercises: [] });
             for (let j = 0; j < 10; j++) {
                 workout_details[i - 1].exercises.push({ 
@@ -115,7 +115,7 @@ class WorkoutEdit extends Component {
                         hashMap2[currExercise.name] = 'occupied';
                     }
                 } else {
-                    this.setState({ error: 'Error: all workout days must have a unique name' });
+                    this.setState({ error: 'Error: each workout in the routine must have a unique name' });
                     return;
                 }
             }
@@ -216,7 +216,7 @@ class WorkoutEdit extends Component {
             workoutDays.push(
                 <ListItem
                     panelId={i}
-                    cardTitle={`Workout Day ${i + 1}`}
+                    cardTitle={`Workout ${i + 1}`}
                     headerStyle={styles.subTitleContainer}
                     key={i}
                 >
@@ -332,7 +332,7 @@ class WorkoutEdit extends Component {
                 </CardSection>
                 <CardSection>
                     <Dropdown
-                        label="Number of Workouts Per Week"
+                        label="Number Of Workouts In Routine"
                         disabled={coreInputsDisabled}
                         data={this.dropdown_data}
                         value={this.state.numWorkouts}
@@ -344,7 +344,7 @@ class WorkoutEdit extends Component {
 
             <Card>
                 <CardSection>
-                    <Text>{`Tap on the workout day(s) below to ${viewOrEdit} them`}</Text>
+                    <Text>{`Tap on the workout(s) below to ${viewOrEdit} them`}</Text>
                 </CardSection>
                 {this.renderWorkoutDays(updateInputsDisabled)}
             </Card>

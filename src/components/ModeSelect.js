@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ScrollView, Text, Image, Dimensions } from 'react-native';
+import { ScrollView, Text, Image, Dimensions, NetInfo } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { LoginManager, AccessToken } from 'react-native-fbsdk';
 import { connect } from 'react-redux';
@@ -7,7 +7,7 @@ import firebase from 'react-native-firebase';
 import { purgeStoredState } from 'redux-persist';
 import { persistConfig } from '../App';
 import { Button, Card, CardSection, Spinner } from './common';
-import { loginFBUser } from '../actions';
+import { loginFBUser, connectionChange } from '../actions';
 
 class ModeSelect extends Component {
     componentWillMount() {
@@ -16,6 +16,30 @@ class ModeSelect extends Component {
         if (this.props.user) {
             Actions.main();
         }
+        // Get initial network connection of user
+        NetInfo.isConnected.fetch().then(isConnected => {
+            this.props.connectionChange({ isConnected });
+        });
+    } 
+
+    componentDidMount() {
+        // Setup listener to monitor network connection state of user thereafter
+        NetInfo.isConnected.addEventListener(
+            'connectionChange',
+            this.handleConnectivityChange
+        );
+    }
+
+    componentWillUnmount() {
+        NetInfo.removeEventListener(
+            'connectionChange',
+            this.handleConnectivityChange
+        );
+    }
+
+    // Event handler for connectivity changes
+    handleConnectivityChange = isConnected => {
+        this.props.connectionChange({ isConnected });
     }
 
     // The following function opens the FB login dialogue
@@ -52,12 +76,32 @@ class ModeSelect extends Component {
         }
         } catch (e) {
             console.error(e);
+            this.setState(
+                { errorMsg: 'Login failed, check your network connection.' });
         }
     };
+
+    renderNetworkError() {
+        if (!this.props.isConnected) {
+            return (
+                <CardSection style={styles.transparentSubHeader}>
+                    <Text style={styles.errorTextStyle}>
+                        Please connect to the internet to enable login
+                    </Text>
+                </CardSection>
+            );
+        }
+        return (
+            <CardSection style={styles.transparentSubHeader}>
+                <Text style={{ fontWeight: 'bold', textAlign: 'center' }}>OR</Text>
+            </CardSection> 
+        );
+    }
 
     render() {
         const { height, width } = Dimensions.get('window');
         const { menuButton, firstButton, introText } = styles;
+        const buttonsDisabled = !this.props.isConnected || this.props.loading;
 
         return (
             <ScrollView style={{ flex: 1 }}>
@@ -90,25 +134,23 @@ class ModeSelect extends Component {
                         <Button 
                             styling={[menuButton, firstButton]}
                             onPress={() => Actions.defaultLogin()}
-                            disabled={this.props.loading}
+                            disabled={buttonsDisabled}
                         > 
                             Login with a Champion Account
                         </Button>
                     </CardSection>
-                    {(this.props.loading) ? (
+                    {(this.props.loading) ? 
                         <CardSection>
                             <Spinner />
                         </CardSection>
-                    ) : 
-                        <CardSection style={styles.transparentSubHeader}>
-                            <Text style={{ fontWeight: 'bold', textAlign: 'center' }}>OR</Text>
-                        </CardSection>
+                        :
+                        this.renderNetworkError() 
                     }
                     <CardSection style={styles.transparentSubHeader}>
                         <Button 
                             styling={menuButton} 
                             onPress={() => this.facebookLogin()}
-                            disabled={this.props.loading}
+                            disabled={buttonsDisabled}
                         >
                             Login with Facebook
                         </Button>
@@ -130,12 +172,19 @@ const styles = {
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(255, 255, 255, 0.0)'
+    },
+    errorTextStyle: {
+        fontSize: 15,
+        alignSelf: 'center',
+        textAlign: 'center',
+        color: 'red'
     }
 };
 
-const mapStateToProps = ({ auth }) => {
-    const { user, loading } = auth;
-    return { user, loading };
+const mapStateToProps = ({ auth, connection }) => {
+    const { user, loading, error } = auth;
+    const { isConnected } = connection;
+    return { user, loading, error, isConnected };
 };
 
-export default connect(mapStateToProps, { loginFBUser })(ModeSelect);
+export default connect(mapStateToProps, { loginFBUser, connectionChange })(ModeSelect);
