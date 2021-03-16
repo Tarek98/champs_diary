@@ -5,5 +5,5 @@ in sports and weight lifting.**The app is developed using React Native, Redux, F
 **Please check out the app from the Android or iOS app store under the name "Champion's Diary"**. Please leave a nice rating
 if you like it and provide feedback through a review. 
 
-**iOS Link**: https://itunes.apple.com/app/id1435967370 (no longer available, expired appstore subscription) <br/>
 **Android Link**: https://play.google.com/store/apps/details?id=com.champs_diary 
+**iOS Link** (no longer available, expired appstore subscription): https://itunes.apple.com/app/id1435967370  <br/>
